@@ -1,32 +1,81 @@
 ---
 import Layout from "../layouts/Layout.astro";
-import PlantShop from "../components/PlantShop.tsx";
-import { plantsData } from "../data";
+import { getProducts } from "../utils/contentful";
+
+const products = await getProducts(); // ✅ Fetch in the setup script
 ---
 
-<Layout title="Our Shop - Plants.">
-  <h3
-    class="md:px-4 py-2 font-extrabold font-Quicksand_B text-base text-center"
-  >
+<Layout title="Our Shop">
+  <h3 class="md:px-4 py-2 font-extrabold font-Quicksand_B text-base text-center">
     OUR SHOP
   </h3>
-  <div class="plants-container">
-    {
-      plantsData.map((plant) => (
-        <PlantShop img={plant.img} title={plant.title} price={plant.price} />
-      ))
-    }
+
+  <div class="products-container">
+    {products.map((product) => (
+      <div class="product-card">
+        <img src={product.images[0]} alt={product.title} class="product-image" />
+        <h4 class="product-title">{product.title}</h4>
+        <p class="product-price">${product.price.toFixed(2)}</p>
+        <button class="add-to-cart-btn">Add to Cart</button>
+      </div>
+    ))}
   </div>
 </Layout>
+
 <style>
-  .plants-container {
-    @media (min-width: 760px) {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      grid-template-rows: 1fr 1fr;
-      margin-bottom: 1rem;
-    }
+  .products-container {
     display: block;
     margin-bottom: 1rem;
+  }
+
+  @media (min-width: 760px) {
+    .products-container {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+  }
+
+  .product-card {
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 1rem;
+    text-align: center;
+    background: white;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  }
+
+  .product-image {
+    width: 100%;
+    max-height: 200px;
+    object-fit: cover;
+    border-radius: 8px;
+  }
+
+  .product-title {
+    font-size: 1.2rem;
+    font-weight: bold;
+    margin-top: 0.5rem;
+  }
+
+  .product-price {
+    font-size: 1rem;
+    color: #27ae60;
+    margin: 0.5rem 0;
+  }
+
+  .add-to-cart-btn {
+    background: #27ae60;
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+    font-weight: bold;
+    border-radius: 4px;
+  }
+
+  .add-to-cart-btn:hover {
+    background: #219150;
   }
 </style>
