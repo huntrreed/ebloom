@@ -13,14 +13,22 @@ const products = await getProducts(); // ✅ Fetch in the setup script
   <div class="products-container">
     {products.map((product) => (
       <div class="product-card">
-        <img src={product.images[0]} alt={product.title} class="product-image" />
+        {Array.isArray(product.images) && typeof product.images[0] === 'string' ? (
+          <img src={product.images[0]} class="product-image" />
+          ) : null}
+
         <h4 class="product-title">{product.title}</h4>
-        <p class="product-price">${product.price.toFixed(2)}</p>
+
+        {typeof product.price === 'number' ? (
+          <p class="product-price">${product.price.toFixed(2)}</p>
+        ) : null}
+
         <button class="add-to-cart-btn">Add to Cart</button>
       </div>
     ))}
   </div>
 </Layout>
+
 
 <style>
   .products-container {

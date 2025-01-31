@@ -1,0 +1,72 @@
+---
+import Layout from "../layouts/Layout.astro";
+import { getGalleryItems } from "../utils/contentful";
+
+const galleryItems = await getGalleryItems();
+---
+
+<Layout title="Gallery">
+  <h3 class="md:px-4 py-2 font-extrabold font-Quicksand_B text-base text-center">
+    GALLERY
+  </h3>
+
+  <div class="gallery-container">
+    {galleryItems.map((item) => (
+      <div class="gallery-card">
+        {Array.isArray(item.images) && item.images[0] && typeof item.images[0] === 'string' ? (
+        <img src={item.images[0]} class="gallery-image" />
+                ) : null}
+
+        <h4 class="gallery-title">{item.title}</h4>
+
+        {Array.isArray(item.tags) && item.tags.length > 0 ? (
+          <p class="gallery-tags">{item.tags.join(", ")}</p>
+        ) : null}
+      </div>
+    ))}
+  </div>
+</Layout>
+
+<style>
+  .gallery-container {
+    display: block;
+    margin-bottom: 1rem;
+  }
+
+  @media (min-width: 760px) {
+    .gallery-container {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+  }
+
+  .gallery-card {
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 1rem;
+    text-align: center;
+    background: white;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  }
+
+  .gallery-image {
+    width: 100%;
+    max-height: 200px;
+    object-fit: cover;
+    border-radius: 8px;
+  }
+
+  .gallery-title {
+    font-size: 1.2rem;
+    font-weight: bold;
+    margin-top: 0.5rem;
+  }
+
+  .gallery-tags {
+    font-size: 1rem;
+    color: #555;
+    margin: 0.5rem 0;
+  }
+</style>
