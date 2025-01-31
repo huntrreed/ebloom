@@ -22,6 +22,7 @@ export async function getGalleryItems() {
 
     return entries.items.map(item => ({
       title: item.fields.title,
+      category: item.fields.category,
       images: Array.isArray(item.fields.imageurl) ? item.fields.imageurl.map((img: any) => img && img.fields && img.fields.file ? img.fields.file.url : '') : [],
       tags: item.fields.tags || [],
     }));

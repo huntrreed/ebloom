@@ -6,67 +6,51 @@ const galleryItems = await getGalleryItems();
 ---
 
 <Layout title="Gallery">
-  <h3 class="md:px-4 py-2 font-extrabold font-Quicksand_B text-base text-center">
-    GALLERY
-  </h3>
+  <h2 class="text-center text-3xl font-bold text-[#eadfcb] mt-6 mb-8">Gallery</h2>
 
-  <div class="gallery-container">
+  <div class="gallery-grid">
     {galleryItems.map((item) => (
-      <div class="gallery-card">
-        {Array.isArray(item.images) && item.images[0] && typeof item.images[0] === 'string' ? (
-        <img src={item.images[0]} class="gallery-image" />
-                ) : null}
-
-        <h4 class="gallery-title">{item.title}</h4>
-
-        {Array.isArray(item.tags) && item.tags.length > 0 ? (
-          <p class="gallery-tags">{item.tags.join(", ")}</p>
-        ) : null}
-      </div>
+      <div class="gallery-item">
+<img src={`https:${item.images[0]}`} class="gallery-image" alt={item.title} />
+</div>
     ))}
   </div>
 </Layout>
 
 <style>
-  .gallery-container {
-    display: block;
-    margin-bottom: 1rem;
-  }
-
-  @media (min-width: 760px) {
-    .gallery-container {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 1rem;
-      margin-bottom: 1rem;
-    }
-  }
-
-  .gallery-card {
-    border: 1px solid #ddd;
-    border-radius: 8px;
+  .gallery-grid {
+    column-count: 3;
+    column-gap: 1.5rem;
+    margin: 2rem auto;
+    max-width: 1200px;
     padding: 1rem;
-    text-align: center;
-    background: white;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  }
+
+  .gallery-item {
+    display: inline-block;
+    width: 100%;
+    margin-bottom: 1.5rem;
+    break-inside: avoid;
   }
 
   .gallery-image {
     width: 100%;
-    max-height: 200px;
-    object-fit: cover;
+    height: auto;
+    object-fit: contain;
     border-radius: 8px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
   }
 
-  .gallery-title {
-    font-size: 1.2rem;
-    font-weight: bold;
-    margin-top: 0.5rem;
+  /* Responsive Layout */
+  @media screen and (max-width: 1024px) {
+    .gallery-grid {
+      column-count: 2;
+    }
   }
 
-  .gallery-tags {
-    font-size: 1rem;
-    color: #555;
-    margin: 0.5rem 0;
+  @media screen and (max-width: 600px) {
+    .gallery-grid {
+      column-count: 1;
+    }
   }
 </style>

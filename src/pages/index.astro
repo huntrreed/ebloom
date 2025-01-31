@@ -2,7 +2,6 @@
 import Layout from "../layouts/Layout.astro";
 import Hero from "../components/Hero.astro";
 import PlantSlider from "../components/PlantSlider.tsx";
-import Reviews from "../components/Reviews.tsx";
 import { RatingsData } from "../data";
 import LearnMore from "../components/LearnMore.astro";
 import Middle from "../components/Middle.astro";
@@ -12,6 +11,5 @@ import Middle from "../components/Middle.astro";
   <Hero />
   <LearnMore />
   <PlantSlider client:load />
-  <Reviews ratings={RatingsData} client:load />
   <Middle />
 </Layout>
