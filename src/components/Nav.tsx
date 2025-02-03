@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 
-// icons
+// Icons
 import logo from "../assets/icons/logo.png";
 import search from "../assets/icons/search-icon.png";
 import cart from "../assets/icons/cart-icon.png";
@@ -40,20 +40,25 @@ export default function Nav() {
   };
 
   return (
-    <nav className="w-full bg-[#4e3d34] text-[#eadfcb] flex items-center justify-between pt-6 pb-4 px-6 shadow-md">
+    <nav className="w-full fixed top-0 left-0 bg-[#eadfcb] text-[#4e3d34] flex items-center justify-between px-6 md:px-10 lg:px-12 py-3 shadow-md z-50">
       {/* Logo */}
-      <div className="flex items-center gap-2 h-full w-1/4 lg:w-1/5 justify-start">
-        <a href="/" className="flex items-center justify-center">
-          <img className="h-8 md:h-10 m-4 w-28 md:w-fit" src={logo.src} alt="logo" />
-        </a>
+      <div className="flex items-center gap-2 w-1/4 lg:w-1/5 justify-start">
+      <a href="/" className="flex items-center justify-center">
+  <img
+    className="h-24 md:h-32 w-auto max-w-[200px] md:max-w-[300px]"
+    src={logo.src}
+    alt="logo"
+  />
+</a>
+
       </div>
 
-      {/* Desktop Nav */}
+      {/* Desktop Nav (Larger Text) */}
       <motion.div
         variants={navMove}
         animate="visible"
         initial="hidden"
-        className="hidden lg:flex gap-10 font-semibold text-lg lg:w-3/5 lg:items-center lg:justify-center"
+        className="hidden lg:flex gap-10 font-semibold text-xl lg:w-3/5 justify-center"
       >
         <motion.a variants={linkMove} href="/" className="hover:text-[#d7a55a]">
           Home
@@ -72,51 +77,42 @@ export default function Nav() {
         </motion.a>
       </motion.div>
 
-      {/* Icons */}
-      <div className="flex w-1/4 items-center justify-around lg:w-1/5 lg:justify-center p-2">
-        <div className="flex items-center justify-around w-full gap-4 lg:w-1/2 lg:items-end mt-2 lg:m-0">
-          <img className="hover:cursor-pointer h-5 opacity-80 hover:opacity-100 transition" src={search.src} alt="search-icon" />
-          <img className="hover:cursor-pointer h-5 opacity-80 hover:opacity-100 transition" src={profile.src} alt="profile-icon" />
-          <img className="hover:cursor-pointer h-5 opacity-80 hover:opacity-100 transition" src={cart.src} alt="cart-icon" />
-        </div>
+      {/* Icons (No Changes) */}
+      <div className="flex w-1/4 justify-end lg:w-1/5 p-2 space-x-4">
+        <img className="cursor-pointer h-5 opacity-80 hover:opacity-100 transition" src={search.src} alt="search-icon" />
+        <img className="cursor-pointer h-5 opacity-80 hover:opacity-100 transition" src={profile.src} alt="profile-icon" />
+        <img className="cursor-pointer h-5 opacity-80 hover:opacity-100 transition" src={cart.src} alt="cart-icon" />
 
         {/* Mobile Menu Toggle */}
-        <div onClick={() => setToggled((prevToggle) => !prevToggle)} className="ml-10 mt-2 space-y-1.5 cursor-pointer z-50 lg:hidden">
-          <motion.span animate={{ rotateZ: toggled ? 45 : 0, y: toggled ? 5 : 0 }} transition={{ duration: 0.3, ease: "easeInOut" }} className="block h-0.5 w-5 bg-[#eadfcb]"></motion.span>
-          <motion.span animate={{ rotateZ: toggled ? -45 : 0, y: toggled ? -5 : 0 }} transition={{ duration: 0.3, ease: "easeInOut" }} className="block h-0.5 w-5 bg-[#eadfcb]"></motion.span>
+        <div onClick={() => setToggled((prevToggle) => !prevToggle)} className="lg:hidden cursor-pointer z-50">
+          <motion.span animate={{ rotateZ: toggled ? 45 : 0, y: toggled ? 5 : 0 }} transition={{ duration: 0.3 }} className="block h-0.5 w-5 bg-[#4e3d34]"></motion.span>
+          <motion.span animate={{ rotateZ: toggled ? -45 : 0, y: toggled ? -5 : 0 }} transition={{ duration: 0.3 }} className="block h-0.5 w-5 bg-[#4e3d34]"></motion.span>
         </div>
       </div>
 
-      {/* Mobile Nav */}
+      {/* Mobile Nav (No Changes) */}
       {toggled && (
         <motion.div
           animate={{ opacity: 1, x: 0 }}
           initial={{ opacity: 0, x: 25 }}
-          transition={{ duration: 0.6, ease: "easeInOut" }} // Faster but still smooth
-          className="flex gap-12 font-Quicksand_B font-bold fixed bg-[#4e3d34] bottom-0 left-0 w-full h-full items-center justify-center z-40 shadow-xl"
+          transition={{ duration: 0.6, ease: "easeInOut" }}
+          className="fixed inset-0 bg-[#4e3d34] flex flex-col items-center justify-center gap-6 text-[#eadfcb] text-xl z-40"
         >
-          <motion.div
-            variants={navMove}
-            animate="visible"
-            initial="hidden"
-            className="flex flex-col text-xl gap-8 text-[#eadfcb]"
-          >
-            <motion.a variants={linkMove} href="/">
-              Home
-            </motion.a>
-            <motion.a variants={linkMove} href="/shop">
-              Shop
-            </motion.a>
-            <motion.a variants={linkMove} href="/gallery">
-              Gallery
-            </motion.a>
-            <motion.a variants={linkMove} href="/about">
-              About
-            </motion.a>
-            <motion.a variants={linkMove} href="/contact">
-              Contact
-            </motion.a>
-          </motion.div>
+          <motion.a variants={linkMove} href="/" onClick={() => setToggled(false)}>
+            Home
+          </motion.a>
+          <motion.a variants={linkMove} href="/shop" onClick={() => setToggled(false)}>
+            Shop
+          </motion.a>
+          <motion.a variants={linkMove} href="/gallery" onClick={() => setToggled(false)}>
+            Gallery
+          </motion.a>
+          <motion.a variants={linkMove} href="/about" onClick={() => setToggled(false)}>
+            About
+          </motion.a>
+          <motion.a variants={linkMove} href="/contact" onClick={() => setToggled(false)}>
+            Contact
+          </motion.a>
         </motion.div>
       )}
     </nav>

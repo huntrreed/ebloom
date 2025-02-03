@@ -22,8 +22,8 @@ const { title } = Astro.props;
     <meta name="generator" content={Astro.generator} />
     <title>{title}</title>
   </head>
-  <body class="bg-white app-container">
-    <main>
+  <body class="bg-white w-full overflow-x-hidden">
+    <main class="w-full min-h-screen">
       <Nav client:load />
       <slot />
       <Footer />

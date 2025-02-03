@@ -42,12 +42,7 @@ const Footer = () => {
           </div>
           <div className="footer-text text-center gap-5 text-base">
             <div>
-              <h2 className="pb-4">
-                Built by{" "}
-                <a className=" font-bold" href="https://github.com/Rei-ne/">
-                  Reine_Dev
-                </a>
-              </h2>
+          
             </div>
             <div>
               <h2 className="py-4">Help</h2>

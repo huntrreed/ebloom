@@ -6,23 +6,34 @@ const galleryItems = await getGalleryItems();
 ---
 
 <Layout title="Gallery">
-  <h2 class="text-center text-3xl font-bold text-[#eadfcb] mt-6 mb-8">Gallery</h2>
+  <div class="gallery-page">
+    <h2 class="text-center text-3xl font-bold text-[#deccb4] mt-6 mb-8">Gallery</h2>
 
-  <div class="gallery-grid">
-    {galleryItems.map((item) => (
-      <div class="gallery-item">
-<img src={`https:${item.images[0]}`} class="gallery-image" alt={item.title} />
-</div>
-    ))}
+    <div class="gallery-grid">
+      {galleryItems.map((item) => (
+        <div class="gallery-item">
+          <img src={item.images[0]} class="gallery-image" />
+        </div>
+      ))}
+    </div>
   </div>
 </Layout>
 
 <style>
+  /* Fixes navbar overlap */
+  .gallery-page {
+    background-color: #3c2f2f; /* Corrected dark brown background */
+    min-height: 100vh;
+    padding: 6rem 2rem 2rem; /* Added top padding to avoid overlap */
+    width: 100%;
+  }
+
+  /* Full-width gallery */
   .gallery-grid {
     column-count: 3;
     column-gap: 1.5rem;
     margin: 2rem auto;
-    max-width: 1200px;
+    max-width: 1440px; /* Matches navbar width */
     padding: 1rem;
   }
 

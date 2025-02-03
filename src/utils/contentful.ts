@@ -6,15 +6,26 @@ const client = createClient({
 });
 
 // Fetch Products for Store Page
+// Fetch Products for Store Page
 export async function getProducts() {
-    try {
-      const response = await client.getEntries({ content_type: 'product' });
-      return response.items.map((item) => item.fields);
-    } catch (error) {
-      console.error('Error fetching products:', error);
-      return [];
-    }
+  try {
+    const response = await client.getEntries({ content_type: "product" });
+
+    return response.items.map((item) => ({
+      title: item.fields.title,
+      price: item.fields.price || 0,
+      inStock: item.fields.inStock === true,
+      // 🔥 FIX: Ensure we correctly extract the image URL
+      images: Array.isArray(item.fields.imageURL)
+        ? item.fields.imageURL.map((img: any) => img?.fields?.file?.url ? `https:${img.fields.file.url}` : "")
+        : [],
+    }));
+  } catch (error) {
+    console.error("Error fetching products:", error);
+    return [];
   }
+}
+
 
 // Fetch Gallery Items for Gallery Page
 export async function getGalleryItems() {
