@@ -5,11 +5,17 @@ interface Props {
   img: string;
   price: string;
   inStock: boolean;
+  category: string;
 }
 
-const PlantShop: React.FC<Props> = ({ title, img, price, inStock }) => {
+const PlantShop: React.FC<Props> = ({ title, img, price, inStock, category }) => {
   return (
-    <div className="card mt-4 w-full flex flex-col items-center justify-center">
+    <div 
+    className="card mt-4 w-full flex flex-col items-center justify-center product-card"
+    data-instock={inStock ? "true" : "false"}  
+    data-category={category}
+    >
+
       <div className="flex items-center flex-col justify-between md:w-[300px] bg-[#eadfcb] p-4 rounded-lg shadow-lg">
         {/* Product Image */}
         {img ? (
@@ -22,7 +28,7 @@ const PlantShop: React.FC<Props> = ({ title, img, price, inStock }) => {
 
         {/* Product Title */}
         <div className="mt-6 flex flex-col text-sm w-40 sm:w-60 md:w-60 text-center">
-          <p className="font-Quicksand_B text-xs sm:text-sm text-[#4e3d34]">{title}</p>
+          <p className="font-Quicksand_B text-xs sm:text-sm font-semibold text-[#4e3d34]">{title}</p>
           <p className="font-Quicksand_L text-xs sm:text-sm text-green-600">${price}</p>
         </div>
 

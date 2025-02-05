@@ -1,63 +1,60 @@
 import React from "react";
-
 import { Image } from "astro:assets";
-// icons
+
+// Icons
 import logo from "../assets/icons/logo.png";
-import facebook from "../assets/icons/facebook.png";
 import instagram from "../assets/icons/instagram.png";
-import twitter from "../assets/icons/twitter.png";
+
+// Toggle this to show/hide the newsletter
+const showNewsletter = false; // Set to 'true' when you want to enable it
 
 const Footer = () => {
-  return (
-    <>
-      <div className="w-full lg:flex lg:px-8">
-        <div className="flex items-center justify-center w-4/5 text-center mx-auto py-8 lg:w-1/2 lg:text-left">
-          <h2 className="font-Quicksand_B text-xl lg:text-2xl">
-            Stay updated with special offers, plant-parenting tips, and more.
-          </h2>
-        </div>
-        <div className="py-2 lg:bg-white bg-footer flex items-center justify-center relative w-full lg:w-1/2">
-          <div className="relative w-full lg:mx-5 mx-3">
-            <input
-              id="email"
-              type="text"
-              placeholder="Your email"
-              className="block w-full px-3 py-2 text-black border-b-2 lg:bg-white bg-footer focus:outline-none focus:border-black font-sm"
-            />
-            <span className="absolute block w-full h-1 bottom-0 left-0 transition-all duration-300 ease-in-out"></span>
-          </div>
+  const currentYear = new Date().getFullYear(); // Gets the current year dynamically
 
-          <button className="xs:text-xs sm:text-sm bg-black w-[100px] lg:w-[120px] text-white py-1 px-4 md:my-4 lg:px-8 rounded-full font-Quicksand_L absolute right-4 mb-1">
-            Subscribe
-          </button>
+  return (
+    <section className="font-Quicksand_L bg-[#eadfcb] flex flex-col items-center justify-center py-6 w-full h-[240px] lg:h-[180px]"> {/* Adjusted height */}
+      <div className="flex flex-col items-center gap-6 w-full"> {/* Increased gap */}
+
+        {/* Logo */}
+        <div className="footer-logo w-32 lg:w-36 h-14 lg:h-16 py-2"> 
+          <a href="/">
+            <img src={logo.src} alt="Embered Blooms logo" />
+          </a>
+        </div>
+
+        {/* Conditional Newsletter Section */}
+        {showNewsletter && (
+          <div className="flex flex-col items-center justify-center w-full">
+            <h2 className="font-Quicksand_B text-sm lg:text-base text-center">
+              Stay updated with new items, updates, and more.
+            </h2>
+            <div className="flex items-center mt-2">
+              <input
+                id="email"
+                type="text"
+                placeholder="Your email"
+                className="block w-56 px-3 py-2 text-black border-b-2 bg-transparent focus:outline-none focus:border-black font-sm"
+              />
+              <button className="xs:text-xs sm:text-sm bg-black text-white py-1 px-4 lg:px-6 rounded-full font-Quicksand_L ml-2">
+                Subscribe
+              </button>
+            </div>
+          </div>
+        )}
+
+        {/* Social Icons */}
+        <div className="flex gap-7 mt-2"> {/* Added space */}
+          <a href="https://www.instagram.com/YOUR_INSTAGRAM_HANDLE" target="_blank" rel="noopener noreferrer">
+            <img src={instagram.src} alt="Instagram" className="h-6 w-6 lg:h-8 lg:w-8" />
+          </a>
+        </div>
+
+        {/* Copyright Section */}
+        <div className="text-sm text-[#4e3d34] opacity-80 mt-4">
+          © {currentYear} Embered Blooms. All rights reserved.
         </div>
       </div>
-      <section className="font-Quicksand_L bg-footer flex items-center justify-center py-8 w-full  h-[320px]">
-        <div className=" flex flex-col items-center justify-between gap-4">
-          <div className="footer-logo w-28 h-12 py-2">
-            <a href="#">
-              {" "}
-              <img src={logo.src} alt="planty'x logo" />
-            </a>
-          </div>
-          <div className="footer-text text-center gap-5 text-base">
-            <div>
-          
-            </div>
-            <div>
-              <h2 className="py-4">Help</h2>
-              <h2 className="py-4">Contact Us</h2>
-              <h2 className="py-4">Privacy & Terms</h2>
-            </div>
-          </div>
-          <div className="socials-img flex w-full items-center justify-between">
-            <img src={facebook.src} alt="" />
-            <img src={twitter.src} alt="" />
-            <img src={instagram.src} alt="" />
-          </div>
-        </div>
-      </section>
-    </>
+    </section>
   );
 };
 

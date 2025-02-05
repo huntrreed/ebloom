@@ -4,42 +4,131 @@ import { getProducts } from "../utils/contentful";
 import PlantShop from "../components/PlantShop";
 
 const products = await getProducts();
+const categories = ["All", "Ornament", "Print", "Card"];
 ---
 
 <Layout title="Our Shop">
-  <h3 class="md:px-4 py-2 font-extrabold font-Quicksand_B text-base text-center text-[#eadfcb]">
+  <h3 class="md:px-4 py-2 font-extrabold font-Quicksand_B text-lg md:text-xl text-center text-[#eadfcb]">
     OUR SHOP
   </h3>
 
-  <div class="products-container">
+  <!-- FILTERS -->
+  <div class="filter-container flex flex-wrap justify-center gap-4 mb-6">
+    <!-- Availability Filter -->
+    <select id="availabilityFilter" class="p-2 border rounded-md bg-[#eadfcb] text-[#4e3d34]">
+      <option value="all">All</option>
+      <option value="available">Available</option>
+      <option value="sold-out">Sold Out</option>
+    </select>
+
+    <!-- Category Filter -->
+    <select id="categoryFilter" class="p-2 border rounded-md bg-[#eadfcb] text-[#4e3d34]">
+      {categories.map((category) => (
+        <option value={category.toLowerCase()}>{category}</option>
+      ))}
+    </select>
+  </div>
+
+  <!-- PRODUCTS -->
+  <div class="products-container" id="productsContainer">
     {products.map((product) => (
       <PlantShop 
         title={typeof product.title === 'string' ? product.title : ""}
-        img={product.images.length > 0 ? product.images[0] : ""}
+        img={product.images.length > 0 ? product.images[0] : ""} 
         price={typeof product.price === 'number' ? product.price.toFixed(2) : "0.00"}
         inStock={product.inStock}
+        category={product.category ? product.category.toLowerCase() : "all"}
       />
     ))}
   </div>
 </Layout>
 
+<!-- FILTER SCRIPT -->
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const availabilityFilter = document.getElementById("availabilityFilter");
+    const categoryFilter = document.getElementById("categoryFilter");
+
+    function updateFilters() {
+      const availability = availabilityFilter ? (availabilityFilter as HTMLSelectElement).value : "all";
+      const category = categoryFilter ? (categoryFilter as HTMLSelectElement).value : "all";
+
+      document.querySelectorAll(".product-card").forEach(card => {
+        const isAvailable = card.getAttribute("data-instock") === "true"; 
+        const productCategory = card.getAttribute("data-category");
+
+        let show = true;
+
+        if (availability === "available" && !isAvailable) show = false;
+        if (availability === "sold-out" && isAvailable) show = false;
+        if (category !== "all" && productCategory !== category) show = false;
+
+        (card as HTMLElement).style.display = show ? "block" : "none";
+      });
+    }
+
+    // ✅ Fix: Ensure event listeners are correctly attached
+    if (availabilityFilter && categoryFilter) {
+      availabilityFilter.addEventListener("change", updateFilters);
+      categoryFilter.addEventListener("change", updateFilters);
+    }
+  });
+</script>
+
 <style>
   /* Dark brown background */
   body {
-    background-color: #4e3d34;
+    background-color: #4e3d34 !important;
+    max-width: 100vw; /* Prevent overflow */
+    overflow-x: hidden;
   }
 
+  /* Ensure filters are positioned correctly */
+  .filter-container {
+    margin-top: 10rem; /* Pushes filters below navbar */
+    margin-bottom: 2rem; /* Adds spacing between filters and products */
+  }
+
+  /* Responsive Product Grid */
   .products-container {
-    display: block;
+    display: grid;
+    justify-items: center;
+    gap: 1rem; /* Guarantees space between items */
     margin-bottom: 1rem;
+    padding-top: 2rem; /* Ensures space between filters and cards */
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); /* Adjusts dynamically */
+    width: 100%;
   }
 
-  @media (min-width: 760px) {
+  /* Ensure product cards remain visible and never overlap */
+  .product-card {
+    width: 100%;
+    max-width: 250px; /* Keeps cards from becoming too large */
+    flex-basis: calc(100% / auto-fill - 1rem); /* Adjust based on available space */
+  }
+
+  /* Prevent unnecessary horizontal scrolling */
+  @media (max-width: 480px) {
     .products-container {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 1rem;
-      margin-bottom: 1rem;
+      grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    }
+  }
+
+  @media (min-width: 640px) {
+    .products-container {
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .products-container {
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    }
+  }
+
+  @media (min-width: 1280px) {
+    .products-container {
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
     }
   }
 </style>
