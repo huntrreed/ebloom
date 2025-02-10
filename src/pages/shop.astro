@@ -14,30 +14,33 @@ const categories = ["All", "Ornament", "Print", "Card"];
 
   <!-- FILTERS -->
   <div class="filter-container flex flex-wrap justify-center gap-4 mb-6">
-    <!-- Availability Filter -->
     <select id="availabilityFilter" class="p-2 border rounded-md bg-[#eadfcb] text-[#4e3d34]">
       <option value="all">All</option>
       <option value="available">Available</option>
       <option value="sold-out">Sold Out</option>
     </select>
 
-    <!-- Category Filter -->
     <select id="categoryFilter" class="p-2 border rounded-md bg-[#eadfcb] text-[#4e3d34]">
-      {categories.map((category) => (
+      {categories.map(category => (
         <option value={category.toLowerCase()}>{category}</option>
       ))}
     </select>
   </div>
 
-  <!-- PRODUCTS -->
+  <!-- PRODUCTS GRID -->
   <div class="products-container" id="productsContainer">
-    {products.map((product) => (
+    {products.map(product => (
       <PlantShop 
-        title={typeof product.title === 'string' ? product.title : ""}
+        key={product.slug}  
+        title={typeof product.title === "string" ? product.title : ""}
         img={product.images.length > 0 ? product.images[0] : ""} 
-        price={typeof product.price === 'number' ? product.price.toFixed(2) : "0.00"}
+        price={typeof product.price === "number" ? product.price.toFixed(2) : "0.00"}
         inStock={product.inStock}
         category={product.category ? product.category.toLowerCase() : "all"}
+        slug={product.slug} 
+        data-instock={product.inStock}  
+        data-category={product.category ? product.category.toLowerCase() : "all"}
+
       />
     ))}
   </div>
@@ -46,12 +49,13 @@ const categories = ["All", "Ornament", "Print", "Card"];
 <!-- FILTER SCRIPT -->
 <script>
   document.addEventListener("DOMContentLoaded", function () {
-    const availabilityFilter = document.getElementById("availabilityFilter");
-    const categoryFilter = document.getElementById("categoryFilter");
+    const availabilityFilter = document.getElementById("availabilityFilter") as HTMLSelectElement;
+    const categoryFilter = document.getElementById("categoryFilter") as HTMLSelectElement;
 
     function updateFilters() {
-      const availability = availabilityFilter ? (availabilityFilter as HTMLSelectElement).value : "all";
-      const category = categoryFilter ? (categoryFilter as HTMLSelectElement).value : "all";
+      if (!availabilityFilter || !categoryFilter) return;
+      const availability = availabilityFilter.value;
+      const category = categoryFilter.value;
 
       document.querySelectorAll(".product-card").forEach(card => {
         const isAvailable = card.getAttribute("data-instock") === "true"; 
@@ -67,11 +71,8 @@ const categories = ["All", "Ornament", "Print", "Card"];
       });
     }
 
-    // ✅ Fix: Ensure event listeners are correctly attached
-    if (availabilityFilter && categoryFilter) {
-      availabilityFilter.addEventListener("change", updateFilters);
-      categoryFilter.addEventListener("change", updateFilters);
-    }
+    availabilityFilter.addEventListener("change", updateFilters);
+    categoryFilter.addEventListener("change", updateFilters);
   });
 </script>
 
@@ -93,42 +94,46 @@ const categories = ["All", "Ornament", "Print", "Card"];
   .products-container {
     display: grid;
     justify-items: center;
-    gap: 1rem; /* Guarantees space between items */
+    gap: 1.5rem; /* Increased space between items */
     margin-bottom: 1rem;
     padding-top: 2rem; /* Ensures space between filters and cards */
-    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); /* Adjusts dynamically */
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); /* ✅ More responsive */
     width: 100%;
   }
 
-  /* Ensure product cards remain visible and never overlap */
+  /* Fix product card layout */
   .product-card {
     width: 100%;
-    max-width: 250px; /* Keeps cards from becoming too large */
-    flex-basis: calc(100% / auto-fill - 1rem); /* Adjust based on available space */
+    max-width: 250px; /* Ensures consistency */
+    flex-basis: 220px; /* Adjusted to ensure proper layout */
+    padding: 1rem;
+    background-color: #eadfcb;
+    border-radius: 8px;
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
   }
 
   /* Prevent unnecessary horizontal scrolling */
   @media (max-width: 480px) {
     .products-container {
-      grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
     }
   }
 
   @media (min-width: 640px) {
     .products-container {
-      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
     }
   }
 
   @media (min-width: 1024px) {
     .products-container {
-      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
     }
   }
 
   @media (min-width: 1280px) {
     .products-container {
-      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
     }
   }
 </style>

@@ -1,0 +1,140 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import { getProducts } from "../../utils/contentful";
+
+export async function getStaticPaths() {
+  const products = await getProducts();
+  
+  return products.map(product => ({
+    params: { slug: product.slug },
+    props: { product },
+  }));
+}
+
+const { product } = Astro.props;
+
+if (!product) {
+  return Astro.redirect('/404');
+}
+---
+
+<Layout title={typeof product.title === 'string' ? product.title : 'Untitled'}>
+  <div class="container mx-auto px-6 pt-32 pb-16 mt-24">
+
+    <!-- Back to Shop Button -->
+    <div class="mb-6">
+      <a href="/shop" class="bg-[#4e3d34] text-[#eadfcb] px-4 py-2 rounded-md hover:bg-[#3a2b23] transition inline-block">
+        ← Return to Shop
+      </a>
+    </div>
+
+    <!-- Product Display Section -->
+    <div class="flex flex-col md:flex-row items-start md:items-center gap-10">
+      
+      <!-- Product Images -->
+      <div class="w-full md:w-1/2 relative flex flex-col items-center">
+        <div class="relative flex items-center justify-center w-full">
+
+          <!-- Left Arrow -->
+          <button id="prevImage" class="absolute left-2 top-1/2 transform -translate-y-1/2 bg-[#4e3d34] text-white px-3 py-2 rounded-full opacity-80 hover:opacity-100 transition hidden">
+            ◀
+          </button>
+
+          <!-- Main Image -->
+          <img id="image" class="w-full max-w-sm object-cover rounded-lg" src={Array.isArray(product.images) && typeof product.images[0] === 'string' ? product.images[0] : ""} alt={typeof product.title === 'string' ? product.title : 'Untitled'} />
+
+          <!-- Right Arrow -->
+          <button id="nextImage" class="absolute right-2 top-1/2 transform -translate-y-1/2 bg-[#4e3d34] text-white px-3 py-2 rounded-full opacity-80 hover:opacity-100 transition hidden">
+            ▶
+          </button>
+        </div>
+
+        <!-- Thumbnail Images -->
+        {product.images.length > 1 && (
+          <div class="flex justify-center gap-2 mt-4">
+            {product.images.map((img, index) => (
+              <button class="w-14 h-14 border rounded-lg hover:border-[#4e3d34]" onclick={`updateImage(${index})`}>
+                <img class="w-full h-full object-cover rounded-lg" src={img} alt={`Thumbnail ${index+1}`} />
+              </button>
+            ))}
+          </div>
+        )}
+      </div>
+
+      <!-- Product Info -->
+      <div class="w-full md:w-1/2 text-left">
+        <h1 class="text-3xl font-bold text-[#4e3d34]">{product.title}</h1>
+        <p class="text-xl text-[#4e3d34] font-semibold mt-2">${typeof product.price === 'number' ? product.price.toFixed(2) : product.price}</p>
+        <p class="mt-2 text-sm">{product.inStock ? "In Stock" : "Sold Out"}</p>
+
+        <!-- Add to Cart or Sold Out Button -->
+        <button class={`mt-4 px-6 py-3 rounded-md text-white font-semibold 
+                      ${product.inStock ? "bg-green-600 hover:bg-green-700" : "bg-gray-500 cursor-not-allowed"}`} 
+                disabled={!product.inStock}>
+          {product.inStock ? "Add to Cart" : "Sold Out"}
+        </button>
+      </div>
+
+    </div>
+
+    <!-- Description Section -->
+    <div class="mt-16 p-6 bg-orange-300 text-[#4e3d34] text-lg rounded-lg">
+      <p>test</p>
+    </div>
+
+  </div>
+</Layout>
+
+
+<!-- Image Scroll Script -->
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const images = JSON.parse('{JSON.stringify(product.images)}');
+    let currentIndex = 0;
+    const imageElement = document.getElementById("image");
+    const prevButton = document.getElementById("prevImage");
+    const nextButton = document.getElementById("nextImage");
+
+    function updateButtons() {
+      if (prevButton) {
+        prevButton.classList.toggle("hidden", currentIndex === 0);
+      }
+      if (nextButton) {
+        nextButton.classList.toggle("hidden", currentIndex === images.length - 1);
+      }
+    }
+
+    if (prevButton) {
+      prevButton.addEventListener("click", () => {
+      if (currentIndex > 0) {
+        currentIndex--;
+        if (imageElement) {
+          (imageElement as HTMLImageElement).src = images[currentIndex];
+        }
+        updateButtons();
+      }
+      });
+    }
+    if (nextButton) {
+      nextButton.addEventListener("click", () => {
+        if (currentIndex < images.length - 1) {
+          currentIndex++;
+          if (imageElement) {
+            (imageElement as HTMLImageElement).src = images[currentIndex];
+          }
+          updateButtons();
+        }
+      });
+    }
+
+    (window as any).updateImage = function(index: number) {
+      if (imageElement) {
+        (imageElement as HTMLImageElement).src = images[index];
+      }
+      currentIndex = index;
+      updateButtons();
+    };
+
+    updateButtons(); // Ensure buttons are correctly set at the start
+  });
+</script>

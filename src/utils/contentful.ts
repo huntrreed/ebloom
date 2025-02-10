@@ -10,13 +10,16 @@ export async function getProducts() {
   try {
     const response = await client.getEntries({ 
       content_type: "product",
-      include: 2 // Ensures linked assets are fetched
+      include: 2
     });
+
+    console.log("🔍 Raw Contentful Response:", JSON.stringify(response.items, null, 2));
 
     return response.items.map((item) => ({
       title: item.fields.title,
       price: item.fields.price || 0,
       inStock: item.fields.inStock === true,
+      slug: item.fields.slug || "missing-slug",  // ✅ Debug: See if slug exists
       category: typeof item.fields.category === 'string' ? item.fields.category.toLowerCase() : "all",
       images: Array.isArray(item.fields.imageUrl)
         ? item.fields.imageUrl.map((img: any) => img?.fields?.file?.url ? `https:${img.fields.file.url}` : "").filter(Boolean)
@@ -24,10 +27,11 @@ export async function getProducts() {
     }));
     
   } catch (error) {
-    console.error("Error fetching products:", error);
+    console.error("❌ Error fetching products:", error);
     return [];
   }
 }
+
 
 
 

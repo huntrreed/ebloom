@@ -1,29 +1,43 @@
 ---
 import { Image } from "astro:assets";
-import plant1 from "../assets/images/image2.png";
-import plant2 from "../assets/images/image3.png";
-
+import signs from "../assets/images/signsmiddle.jpg";
+import ornaments from "../assets/images/ornamentsmiddle.jpg";
 import plant from "../assets/images/plant4.png";
 ---
 
 <div
   class="flex grid-cols-2 w-full gap-x-4 md:gap-x-6 px-6 mt-4 h-64 md:h-96 lg:h-[400px] items-center justify-center"
 >
-  <div class="w-1/2 h-full">
+  <!-- SIGNS -->
+  <a href="/gallery" class="relative w-1/2 h-full group">
     <Image
-      class="h-full w-full object-cover rounded-l-lg"
-      src={plant1}
+      class="h-full w-full object-cover rounded-l-lg transition-all duration-300 group-hover:brightness-75"
+      src={signs}
       alt="An image of a house plant"
     />
-  </div>
-  <div class="w-1/2 h-full">
+    <div
+      class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+    >
+      <span class="text-white text-2xl md:text-4xl font-bold">Signs</span>
+    </div>
+  </a>
+
+  <!-- ART -->
+  <a href="/shop" class="relative w-1/2 h-full group">
     <Image
-      class="h-full w-full object-cover rounded-r-lg"
-      src={plant2}
+      class="h-full w-full object-cover rounded-r-lg transition-all duration-300 group-hover:brightness-75"
+      src={ornaments}
       alt="An image of a house plant"
     />
-  </div>
+    <div
+      class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+    >
+      <span class="text-white text-2xl md:text-4xl font-bold">Art</span>
+    </div>
+  </a>
 </div>
+
+<!-- Instagram Section -->
 <div
   class="w-full flex items-center justify-center px-6 relative mt-8 h-64 md:h-96 lg:h-[460px]"
 >

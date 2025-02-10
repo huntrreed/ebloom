@@ -3,27 +3,34 @@ import Layout from "../layouts/Layout.astro";
 import { Image } from "astro:assets";
 import plant from "../assets/images/plant4.png";
 ---
+<Layout title="About">
+  <div class="bg-[#eadfcb] min-h-screen flex flex-col">
+    
+    <!-- About Me Section -->
+    <section class="container mx-auto flex flex-col lg:flex-row py-40 gap-24">
+      <!-- ⬆ Increased `gap-24` for better spacing between text & image -->
 
-<Layout title="About Planty'x.">
-  <div class="bg-gray-100 min-h-screen flex flex-col">
-    <!-- Content Section -->
-    <section class="container mx-auto flex flex-col lg:flex-row py-12">
       <!-- Text Content -->
-      <div class="lg:w-1/2 px-6">
-        <h2 class="font-Quicksand_B text-2xl font-semibold mb-4">
-          Bringing Nature into Your Life
+      <div class="lg:w-[60%] px-8 flex flex-col justify-center">
+        <!-- ⬆ Increased width from `w-1/2` to `w-[60%]` to extend text more right -->
+        <!-- ⬆ Increased padding from `px-6` to `px-8` -->
+        <h2 class="font-Quicksand_B text-3xl font-semibold mb-6 text-[#4e3d34]">
+          Hi, I'm Hunter.
         </h2>
-        <p class="text-gray-700 leading-7">
-          We are passionate about providing the best houseplants for your home
-          and office spaces. Each houseplant set is carefully selected and
-          handled to ensure they thrive in your space. Our commitment to quality
-          and sustainability drives us to deliver the best greenery experience
-          to our customers.
+        <p class="text-[#4e3d34] leading-7 text-lg mt-4">
+          When I was about 15, my dad found me in the garage using his Dremel tool to burn designs into scrap wood. Instead of getting mad, he got me my first real wood burner, and since then, it’s become a gateway art project to the state of my current life (multiple art projects from painting, flower pressing, you name it, around the house constantly).
+        </p>
+        <p class="text-[#4e3d34] leading-7 text-lg mt-4">
+          I’ve lived in Utah for most of my life, and even as an adult, I’m still just a kid who likes to play outside. Most of what I create is inspired by Utah’s mountains, deserts, and wild spaces.
+        </p>
+        <p class="text-[#4e3d34] leading-7 text-lg mt-4">
+          Anyways, I hope you enjoy my work as much as I enjoy making it!
         </p>
       </div>
 
-      <!-- Image -->
-      <div class="lg:w-1/2 mt-8 lg:mt-0">
+      <!-- Slightly Smaller Image -->
+      <div class="lg:w-[50%]">
+        <!-- ⬆ Reduced image size from `lg:w-[65%]` to `lg:w-[50%]` -->
         <Image
           class="w-full rounded-lg"
           src={plant}
@@ -32,23 +39,28 @@ import plant from "../assets/images/plant4.png";
       </div>
     </section>
 
-    <!-- Featured In Section -->
-    <section class="bg-gray-200 py-8">
+    <!-- WHERE TO FIND MY ART SECTION -->
+    </section>
+    <section class="bg-[#b77c45] py-5 mt-20">
+      <!-- ⬆ Increased `mt-20` for better spacing below -->
       <div class="container mx-auto text-center">
-        <h2 class="text-xl font-semibold text-gray-800 mb-4">As Featured In</h2>
-        <div class="flex justify-center space-x-6">
-          <div class="flex flex-col items-center">
-            <img
-              class="w-16 h-16"
-              src="/images/bloomberg.png"
-              alt="Bloomberg Logo"
-            />
-          </div>
-          <div class="flex flex-col items-center">
-            <img class="w-16 h-16" src="/images/forbes.png" alt="Forbes Logo" />
-          </div>
-        </div>
+        <h2 class="font-Quicksand_B text-3xl font-semibold mb-6 text-[#4e3d34]">
+          Where to Find My Art
+        </h2>
+        <p class="text-[#4e3d34] text-lg px-6 md:px-16 leading-7">
+          Most of my art can be found for sale at 
+          <a href="https://www.parkcitygardens.com" target="_blank" 
+            class="underline text-[#4e3d34] hover:text-[#3a2b23] transition-colors">
+            Park City Gardens
+          </a> 
+          or ordered directly through the website. If there’s something in particular 
+          you’re looking for, feel free to 
+          <a href="/contact" class="underline text-[#4e3d34] hover:text-[#3a2b23] transition-colors">
+            reach out
+          </a>!
+        </p>
       </div>
     </section>
+
   </div>
 </Layout>

@@ -6,17 +6,13 @@ interface Props {
   price: string;
   inStock: boolean;
   category: string;
+  slug: string;  // ✅ Add slug prop
 }
 
-const PlantShop: React.FC<Props> = ({ title, img, price, inStock, category }) => {
+const PlantShop: React.FC<Props> = ({ title, img, price, inStock, category, slug }) => {
   return (
-    <div 
-    className="card mt-4 w-full flex flex-col items-center justify-center product-card"
-    data-instock={inStock ? "true" : "false"}  
-    data-category={category}
-    >
-
-      <div className="flex items-center flex-col justify-between md:w-[300px] bg-[#eadfcb] p-4 rounded-lg shadow-lg">
+    <a href={`/shop/${slug}`} className="product-card w-full max-w-[250px] flex flex-col items-center bg-[#eadfcb] p-4 rounded-lg shadow-lg transition-transform transform hover:scale-105">
+      <div className="flex flex-col items-center justify-between md:w-[300px] p-4">
         {/* Product Image */}
         {img ? (
           <img className="w-40 h-60 sm:w-60 sm:h-80 rounded-lg object-cover" src={img} alt={title} />
@@ -42,7 +38,7 @@ const PlantShop: React.FC<Props> = ({ title, img, price, inStock, category }) =>
           {inStock ? "Add to Cart" : "Sold Out"}
         </button>
       </div>
-    </div>
+    </a>
   );
 };
 
