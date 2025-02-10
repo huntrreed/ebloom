@@ -1,6 +1,8 @@
 ---
 import Layout from "../../layouts/Layout.astro";
 import { getProducts } from "../../utils/contentful";
+import leftIcon from "../../../public/icons/lefticon.png";
+import rightIcon from "../../../public/icons/righticon.png";
 
 export async function getStaticPaths() {
   const products = await getProducts();
@@ -36,16 +38,16 @@ if (!product) {
         <div class="relative flex items-center justify-center w-full">
 
           <!-- Left Arrow -->
-          <button id="prevImage" class="absolute left-2 top-1/2 transform -translate-y-1/2 bg-[#4e3d34] text-white px-3 py-2 rounded-full opacity-80 hover:opacity-100 transition hidden">
-            ◀
+          <button id="prevImage" class="absolute left-2 top-1/2 transform -translate-y-1/2 opacity-80 hover:opacity-100 transition hidden">
+            <img src={leftIcon} alt="Previous" class="w-10 h-10" />
           </button>
 
           <!-- Main Image -->
           <img id="image" class="w-full max-w-sm object-cover rounded-lg" src={Array.isArray(product.images) && typeof product.images[0] === 'string' ? product.images[0] : ""} alt={typeof product.title === 'string' ? product.title : 'Untitled'} />
 
           <!-- Right Arrow -->
-          <button id="nextImage" class="absolute right-2 top-1/2 transform -translate-y-1/2 bg-[#4e3d34] text-white px-3 py-2 rounded-full opacity-80 hover:opacity-100 transition hidden">
-            ▶
+          <button id="nextImage" class="absolute right-2 top-1/2 transform -translate-y-1/2 opacity-80 hover:opacity-100 transition hidden">
+            <img src={rightIcon} alt="Next" class="w-10 h-10" />
           </button>
         </div>
 
@@ -106,30 +108,31 @@ if (!product) {
 
     if (prevButton) {
       prevButton.addEventListener("click", () => {
-      if (currentIndex > 0) {
-        currentIndex--;
-        if (imageElement) {
-          (imageElement as HTMLImageElement).src = images[currentIndex];
+        if (currentIndex > 0) {
+          currentIndex--;
+          if (imageElement) {
+            imageElement.src = images[currentIndex];
+          }
+          updateButtons();
         }
-        updateButtons();
-      }
       });
     }
+    
     if (nextButton) {
       nextButton.addEventListener("click", () => {
         if (currentIndex < images.length - 1) {
           currentIndex++;
           if (imageElement) {
-            (imageElement as HTMLImageElement).src = images[currentIndex];
+            imageElement.src = images[currentIndex];
           }
           updateButtons();
         }
       });
     }
 
-    (window as any).updateImage = function(index: number) {
+    window.updateImage = function(index) {
       if (imageElement) {
-        (imageElement as HTMLImageElement).src = images[index];
+        imageElement.src = images[index];
       }
       currentIndex = index;
       updateButtons();

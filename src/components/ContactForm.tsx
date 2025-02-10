@@ -1,113 +1,80 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 
 export default function ContactForm(): JSX.Element {
   const [responseMessage, setResponseMessage] = useState<string>("");
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
-
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
 
-  const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setName(e.target.value);
-  };
-  const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setEmail(e.target.value);
-  };
-  const handleMessageChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setMessage(e.target.value);
-  };
-
-  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsSubmitting(true);
 
     if (message) {
-      setName("");
-      setEmail("");
-      setMessage("");
       setTimeout(() => {
         setIsSubmitting(false);
-        setResponseMessage(message);
-      }, 3000);
-    } else {
-      console.error("An error occurred while submitting the form");
+        setResponseMessage("Message received! (Email functionality coming soon.)");
+        setName("");
+        setEmail("");
+        setMessage("");
+      }, 2000);
     }
-    // Create a form data object
-    // const formData = new FormData();
-    // formData.append("name", name);
-    // formData.append("email", email);
-    // formData.append("message", message);
-
-    // try {
-    //   const response = await fetch("/api/contact", {
-    //     method: "POST",
-    //     body: formData,
-    //   });
-
-    //   if (response.ok) {
-    //     setName("");
-    //     setEmail("");
-    //     setMessage("");
-    //     const data = await response.json();
-    //     setResponseMessage(data.message);
-    //   } else {
-    //     console.error("An error occurred while submitting the form");
-    //   }
-
-    //   setIsSubmitting(false);
-    // } catch (error) {
-    //   console.error("An error occurred while submitting the form", error);
-    // }
-  }
+  };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <div className="mb-4">
-        <label className="block font-medium">Name</label>
-        <input
-          type="text"
-          id="name"
-          name="name"
-          className="w-full p-2 border rounded"
-          required
-          value={name}
-          onChange={handleNameChange}
-        />
-      </div>
-      <div className="mb-4">
-        <label className="block font-medium">Email</label>
-        <input
-          type="email"
-          id="email"
-          name="email"
-          className="w-full p-2 border rounded"
-          required
-          value={email}
-          onChange={handleEmailChange}
-        />
-      </div>
-      <div className="mb-4">
-        <label className="block font-medium">Message</label>
-        <textarea
-          id="message"
-          name="message"
-          className="w-full p-2 border rounded"
-          required
-          value={message}
-          onChange={handleMessageChange}
-        ></textarea>
-      </div>
-      <div className="mb-4">
-        <button
-          type="submit"
-          className="xs:text-xs sm:text-sm bg-black w-[120px] lg:w-[160px] text-white py-2 px-4 md:my-4 lg:px-8 rounded-full font-Quicksand_L"
-          disabled={isSubmitting}
-        >
-          {isSubmitting ? "Submitting..." : "Submit"}
-        </button>
-      </div>
-      {responseMessage && <p>Your message: {responseMessage}</p>}
+    <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+      {/* Name */}
+      <label className="text-[#4e3d34] font-semibold">Your Name</label>
+      <input
+        type="text"
+        id="name"
+        name="name"
+        className="p-3 border rounded-md bg-[#eadfcb] text-[#4e3d34] focus:outline-none focus:ring-2 focus:ring-[#b77c45]"
+        required
+        value={name}
+        onChange={(e) => setName(e.target.value)}
+      />
+
+      {/* Email */}
+      <label className="text-[#4e3d34] font-semibold">Your Email</label>
+      <input
+        type="email"
+        id="email"
+        name="email"
+        className="p-3 border rounded-md bg-[#eadfcb] text-[#4e3d34] focus:outline-none focus:ring-2 focus:ring-[#b77c45]"
+        required
+        value={email}
+        onChange={(e) => setEmail(e.target.value)}
+      />
+
+      {/* Message */}
+      <label className="text-[#4e3d34] font-semibold">Your Message</label>
+      <textarea
+        id="message"
+        name="message"
+        className="p-3 border rounded-md bg-[#eadfcb] text-[#4e3d34] focus:outline-none focus:ring-2 focus:ring-[#b77c45]"
+        required
+        rows={5}
+        value={message}
+        onChange={(e) => setMessage(e.target.value)}
+      ></textarea>
+
+      {/* Submit Button */}
+      <button
+        type="submit"
+        className={`mt-4 px-6 py-3 rounded-md font-semibold transition ${
+          isSubmitting
+            ? "bg-gray-400 text-gray-700 cursor-not-allowed"
+            : "bg-[#b77c45] text-white hover:bg-[#8f5f33]"
+        }`}
+        disabled={isSubmitting}
+      >
+        {isSubmitting ? "Submitting..." : "Send Message"}
+      </button>
+
+      {/* Response Message */}
+      {responseMessage && <p className="text-green-600 mt-2">{responseMessage}</p>}
     </form>
   );
 }
