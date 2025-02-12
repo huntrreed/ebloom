@@ -12,7 +12,7 @@ const Footer = () => {
   const currentYear = new Date().getFullYear(); // Gets the current year dynamically
 
   return (
-    <section className="font-Quicksand_L bg-[#eadfcb] flex flex-col items-center justify-center py-6 w-full h-[240px] lg:h-[180px]"> {/* Adjusted height */}
+    <section className="font-Quicksand_L bg-[#eadfcb] flex flex-col items-center justify-center py-6 w-full h-[230px] lg:h-[180px] pb-4"> {/* Adjusted height */}
       <div className="flex flex-col items-center gap-6 w-full"> {/* Increased gap */}
 
         {/* Logo */}
@@ -50,7 +50,7 @@ const Footer = () => {
         </div>
 
         {/* Copyright Section */}
-        <div className="text-sm text-[#4e3d34] opacity-80 mt-4">
+        <div className="text-sm text-[#4e3d34] opacity-80 mt-4 pb-4">
           © {currentYear} Embered Blooms. All rights reserved.
         </div>
       </div>
