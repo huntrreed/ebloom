@@ -12,45 +12,25 @@ const Footer = () => {
   const currentYear = new Date().getFullYear(); // Gets the current year dynamically
 
   return (
-    <section className="font-Quicksand_L bg-[#eadfcb] flex flex-col items-center justify-center py-6 w-full h-[230px] lg:h-[180px] pb-4"> {/* Adjusted height */}
-      <div className="flex flex-col items-center gap-6 w-full"> {/* Increased gap */}
-
-        {/* Logo */}
-        <div className="footer-logo w-32 lg:w-36 h-14 lg:h-16 py-2"> 
+    <section className="font-Quicksand_L bg-[#eadfcb] flex flex-col items-center justify-center py-6 w-full">
+      <div className="flex flex-col items-center w-full">
+        
+        {/* Logo with proper spacing */}
+        <div className="footer-logo w-28 lg:w-32 h-auto mb-2"> {/* ⬅ Reduced size & spacing */}
           <a href="/">
-            <img src={logo.src} alt="Embered Blooms logo" />
+            <img src={logo.src} alt="Embered Blooms logo" className="w-full h-auto" />
           </a>
         </div>
 
-        {/* Conditional Newsletter Section */}
-        {showNewsletter && (
-          <div className="flex flex-col items-center justify-center w-full">
-            <h2 className="font-Quicksand_B text-sm lg:text-base text-center">
-              Stay updated with new items, updates, and more.
-            </h2>
-            <div className="flex items-center mt-2">
-              <input
-                id="email"
-                type="text"
-                placeholder="Your email"
-                className="block w-56 px-3 py-2 text-black border-b-2 bg-transparent focus:outline-none focus:border-black font-sm"
-              />
-              <button className="xs:text-xs sm:text-sm bg-black text-white py-1 px-4 lg:px-6 rounded-full font-Quicksand_L ml-2">
-                Subscribe
-              </button>
-            </div>
-          </div>
-        )}
-
-        {/* Social Icons */}
-        <div className="flex gap-7 mt-2"> {/* Added space */}
-          <a href="https://www.instagram.com/YOUR_INSTAGRAM_HANDLE" target="_blank" rel="noopener noreferrer">
-            <img src={instagram.src} alt="Instagram" className="h-6 w-6 lg:h-8 lg:w-8" />
+        {/* Social Icons with adjusted spacing */}
+        <div className="flex gap-4 mb-4"> {/* ⬅ Reduced gap so it aligns better */}
+          <a href="https://www.instagram.com/emberedblooms/" target="_blank" rel="noopener noreferrer">
+            <img src={instagram.src} alt="Instagram" className="h-5 w-5 lg:h-6 lg:w-6" />
           </a>
         </div>
 
-        {/* Copyright Section */}
-        <div className="text-sm text-[#4e3d34] opacity-80 mt-4 pb-4">
+        {/* Copyright Section with proper spacing */}
+        <div className="text-sm text-[#4e3d34] opacity-80 pb-4">
           © {currentYear} Embered Blooms. All rights reserved.
         </div>
       </div>
