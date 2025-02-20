@@ -13,7 +13,20 @@ export async function getStaticPaths() {
   }));
 }
 
-const { product } = Astro.props;
+interface Product {
+  title: any;
+  price: number | string;
+  inStock: boolean;
+  images: string[];
+  description?: string;
+}
+
+const { product }: { product: Product } = Astro.props;
+product.price = typeof product.price === 'number' || typeof product.price === 'string' ? product.price : '0';
+product.price = typeof product.price === 'number' ? product.price : parseFloat(product.price) || 0;
+
+// Ensure product has a description property
+product.description = product.description || "No description available.";
 
 if (!product) {
   return Astro.redirect('/404');
@@ -67,7 +80,7 @@ if (!product) {
       <div class="w-full md:w-1/2 text-left">
         <h1 class="text-3xl font-bold text-[#4e3d34]">{product.title}</h1>
         <p class="text-xl text-[#4e3d34] font-semibold mt-2">${typeof product.price === 'number' ? product.price.toFixed(2) : product.price}</p>
-        <p class="mt-2 text-sm">{product.inStock ? "In Stock" : "Sold Out"}</p>
+        <!-- <p class="mt-2 text-sm">{product.inStock ? "In Stock" : "Sold Out"}</p> -->
 
         <!-- Add to Cart or Sold Out Button -->
         <button 
@@ -96,11 +109,11 @@ if (!product) {
 <!-- Image Scroll Script -->
 <script>
   document.addEventListener("DOMContentLoaded", function () {
-    function updateImage(index) {
+    function updateImage(index: number) {
       if (index >= 0 && index < images.length) {
         currentIndex = index;
         if (imageElement) {
-          imageElement.src = images[currentIndex];
+          (imageElement as HTMLImageElement).src = images[currentIndex];
         }
         updateButtons();
       }
@@ -126,7 +139,11 @@ if (!product) {
     // Event listeners for thumbnails
     document.querySelectorAll('[data-index]').forEach(button => {
       button.addEventListener('click', (event) => {
-        const index = parseInt(event.currentTarget.getAttribute('data-index'), 10);
+        const target = event.currentTarget;
+        if (target) {
+          const index = parseInt((target as HTMLElement).getAttribute('data-index') || '0', 10);
+          updateImage(index);
+        }
         updateImage(index);
       });
     });
