@@ -38,16 +38,17 @@ if (!product) {
         <div class="relative flex items-center justify-center w-full">
 
           <!-- Left Arrow -->
-          <button id="prevImage" class="absolute left-2 top-1/2 transform -translate-y-1/2 opacity-80 hover:opacity-100 transition hidden">
+
+          <button id="prevImage" class="absolute left-[-50px] md:left-[-20px] top-1/2 transform -translate-y-1/2 opacity-80 hover:opacity-100 transition hidden">
             <img src={leftIcon} alt="Previous" class="w-10 h-10" />
           </button>
 
           <!-- Main Image -->
           <img id="image" class="w-full max-w-sm object-cover rounded-lg" src={Array.isArray(product.images) && typeof product.images[0] === 'string' ? product.images[0] : ""} alt={typeof product.title === 'string' ? product.title : 'Untitled'} />
 
-          <!-- Right Arrow -->
-          <button id="nextImage" class="absolute right-2 top-1/2 transform -translate-y-1/2 opacity-80 hover:opacity-100 transition hidden">
-            <img src={rightIcon} alt="Next" class="w-10 h-10" />
+         <!-- Right Arrow -->
+          <button id="nextImage" class="absolute right-[-50px] md:right-[-20px] top-1/2 transform -translate-y-1/2 opacity-80 hover:opacity-100 transition hidden">
+          <img src={rightIcon} alt="Next" class="w-10 h-10" />
           </button>
         </div>
 
