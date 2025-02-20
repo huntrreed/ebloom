@@ -38,7 +38,6 @@ if (!product) {
         <div class="relative flex items-center justify-center w-full">
 
           <!-- Left Arrow -->
-
           <button id="prevImage" class="absolute left-[-50px] md:left-[-20px] top-1/2 transform -translate-y-1/2 opacity-80 hover:opacity-100 transition hidden">
             <img src={leftIcon} alt="Previous" class="w-10 h-10" />
           </button>
@@ -46,9 +45,9 @@ if (!product) {
           <!-- Main Image -->
           <img id="image" class="w-full max-w-sm object-cover rounded-lg" src={Array.isArray(product.images) && typeof product.images[0] === 'string' ? product.images[0] : ""} alt={typeof product.title === 'string' ? product.title : 'Untitled'} />
 
-         <!-- Right Arrow -->
+          <!-- Right Arrow -->
           <button id="nextImage" class="absolute right-[-50px] md:right-[-20px] top-1/2 transform -translate-y-1/2 opacity-80 hover:opacity-100 transition hidden">
-          <img src={rightIcon} alt="Next" class="w-10 h-10" />
+            <img src={rightIcon} alt="Next" class="w-10 h-10" />
           </button>
         </div>
 
@@ -71,10 +70,14 @@ if (!product) {
         <p class="mt-2 text-sm">{product.inStock ? "In Stock" : "Sold Out"}</p>
 
         <!-- Add to Cart or Sold Out Button -->
-        <button class={`mt-4 px-6 py-3 rounded-md text-white font-semibold 
-                      ${product.inStock ? "bg-green-600 hover:bg-green-700" : "bg-gray-500 cursor-not-allowed"}`} 
-                disabled={!product.inStock}>
-          {product.inStock ? "Add to Cart" : "Sold Out"}
+        <button 
+          class={`mt-4 px-6 py-3 rounded-md font-semibold transition 
+            ${product.inStock 
+              ? "bg-[#4e3d34] text-[#eadfcb] hover:bg-[#3a2b23]" 
+              : "bg-[#b7a89f] text-[#4e3d34] italic cursor-not-allowed"}`} 
+          disabled={!product.inStock}
+>
+          {product.inStock ? "Add to Cart" : <em>Sold Out</em>}
         </button>
       </div>
 
@@ -82,7 +85,7 @@ if (!product) {
 
     <!-- Description Section -->
     <div class="mt-16 p-6 bg-orange-300 text-[#4e3d34] text-lg rounded-lg">
-      <p>test</p>
+      <p>{product.description}</p>
     </div>
     <!-- Hidden element to store product images data -->
     <div id="product-data" class="hidden">{JSON.stringify(product.images)}</div>
