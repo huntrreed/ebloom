@@ -6,12 +6,16 @@ interface Props {
   price: string;
   inStock: boolean;
   category: string;
-  slug: string;  // ✅ Add slug prop
+  slug: string;  
 }
 
 const PlantShop: React.FC<Props> = ({ title, img, price, inStock, category, slug }) => {
   return (
-    <a href={`/shop/${slug}`} className="product-card w-full max-w-[250px] flex flex-col items-center bg-[#eadfcb] p-4 rounded-lg shadow-lg transition-transform transform hover:scale-105">
+    <a href={`/shop/${slug}`} 
+      className="product-card w-full max-w-[250px] flex flex-col items-center bg-[#eadfcb] p-4 rounded-lg shadow-lg transition-transform transform hover:scale-105"
+      data-instock={inStock}  // ✅ Ensure filters can read inStock status
+      data-category={category.toLowerCase()}  // ✅ Ensure category is lowercase
+    >
       <div className="flex flex-col items-center justify-between md:w-[300px] p-4">
         {/* Product Image */}
         {img ? (

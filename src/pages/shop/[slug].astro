@@ -1,8 +1,8 @@
 ---
 import Layout from "../../layouts/Layout.astro";
 import { getProducts } from "../../utils/contentful";
-import leftIcon from "../../../public/icons/lefticon.png";
-import rightIcon from "../../../public/icons/righticon.png";
+const leftIcon = "/icons/leftIcon.png";
+const rightIcon = "/icons/rightIcon.png";
 
 export async function getStaticPaths() {
   const products = await getProducts();
@@ -55,7 +55,7 @@ if (!product) {
         {product.images.length > 1 && (
           <div class="flex justify-center gap-2 mt-4">
             {product.images.map((img, index) => (
-              <button class="w-14 h-14 border rounded-lg hover:border-[#4e3d34]" onclick={`updateImage(${index})`}>
+              <button class="w-14 h-14 border rounded-lg hover:border-[#4e3d34]" data-index={index}>
                 <img class="w-full h-full object-cover rounded-lg" src={img} alt={`Thumbnail ${index+1}`} />
               </button>
             ))}
@@ -83,7 +83,8 @@ if (!product) {
     <div class="mt-16 p-6 bg-orange-300 text-[#4e3d34] text-lg rounded-lg">
       <p>test</p>
     </div>
-
+    <!-- Hidden element to store product images data -->
+    <div id="product-data" class="hidden">{JSON.stringify(product.images)}</div>
   </div>
 </Layout>
 
@@ -91,53 +92,41 @@ if (!product) {
 <!-- Image Scroll Script -->
 <script>
   document.addEventListener("DOMContentLoaded", function () {
-    const images = JSON.parse('{JSON.stringify(product.images)}');
+    function updateImage(index) {
+      if (index >= 0 && index < images.length) {
+        currentIndex = index;
+        if (imageElement) {
+          imageElement.src = images[currentIndex];
+        }
+        updateButtons();
+      }
+    }
+    // Read images from hidden JSON
+    const productDataElement = document.getElementById("product-data");
+    const images = productDataElement && productDataElement.textContent ? JSON.parse(productDataElement.textContent) : [];
+
     let currentIndex = 0;
     const imageElement = document.getElementById("image");
     const prevButton = document.getElementById("prevImage");
     const nextButton = document.getElementById("nextImage");
 
     function updateButtons() {
-      if (prevButton) {
-        prevButton.classList.toggle("hidden", currentIndex === 0);
-      }
-      if (nextButton) {
-        nextButton.classList.toggle("hidden", currentIndex === images.length - 1);
-      }
+      if (prevButton) prevButton.classList.toggle("hidden", currentIndex === 0);
+      if (nextButton) nextButton.classList.toggle("hidden", currentIndex === images.length - 1);
     }
 
-    if (prevButton) {
-      prevButton.addEventListener("click", () => {
-        if (currentIndex > 0) {
-          currentIndex--;
-          if (imageElement) {
-            imageElement.src = images[currentIndex];
-          }
-          updateButtons();
-        }
+    // Event listeners for arrows
+    if (prevButton) prevButton.addEventListener("click", () => updateImage(currentIndex - 1));
+    if (nextButton) nextButton.addEventListener("click", () => updateImage(currentIndex + 1));
+
+    // Event listeners for thumbnails
+    document.querySelectorAll('[data-index]').forEach(button => {
+      button.addEventListener('click', (event) => {
+        const index = parseInt(event.currentTarget.getAttribute('data-index'), 10);
+        updateImage(index);
       });
-    }
-    
-    if (nextButton) {
-      nextButton.addEventListener("click", () => {
-        if (currentIndex < images.length - 1) {
-          currentIndex++;
-          if (imageElement) {
-            imageElement.src = images[currentIndex];
-          }
-          updateButtons();
-        }
-      });
-    }
+    });
 
-    window.updateImage = function(index) {
-      if (imageElement) {
-        imageElement.src = images[index];
-      }
-      currentIndex = index;
-      updateButtons();
-    };
-
-    updateButtons(); // Ensure buttons are correctly set at the start
+    updateButtons(); // Ensure correct initial state
   });
 </script>

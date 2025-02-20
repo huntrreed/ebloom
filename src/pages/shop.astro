@@ -12,20 +12,23 @@ const categories = ["All", "Ornament", "Print", "Card"];
     OUR SHOP
   </h3>
 
-  <!-- FILTERS -->
-  <div class="filter-container flex flex-wrap justify-center gap-4 mb-6">
-    <select id="availabilityFilter" class="p-2 border rounded-md bg-[#eadfcb] text-[#4e3d34]">
-      <option value="all">All</option>
-      <option value="available">Available</option>
-      <option value="sold-out">Sold Out</option>
-    </select>
+ <!-- ✅ FILTERS SECTION -->
+ <div class="filter-container flex flex-wrap justify-center gap-6 mb-6 p-4 bg-[#4e3d34] rounded-lg">
+  <label class="text-[#eadfcb] font-semibold">Filter by:</label>
 
-    <select id="categoryFilter" class="p-2 border rounded-md bg-[#eadfcb] text-[#4e3d34]">
-      {categories.map(category => (
-        <option value={category.toLowerCase()}>{category}</option>
-      ))}
-    </select>
-  </div>
+  <!-- Availability Filter -->
+  <select id="availabilityFilter" class="p-2 border rounded-md bg-[#eadfcb] text-[#4e3d34]">
+    <option value="all">All</option>
+    <option value="available">In Stock Only</option> 
+  </select>
+
+  <!-- Type Filter -->
+  <select id="categoryFilter" class="p-2 border rounded-md bg-[#eadfcb] text-[#4e3d34]">
+    {categories.map(category => (
+      <option value={category.toLowerCase()}>{category}</option>
+    ))}
+  </select>
+</div>
 
   <!-- PRODUCTS GRID -->
   <div class="products-container" id="productsContainer">

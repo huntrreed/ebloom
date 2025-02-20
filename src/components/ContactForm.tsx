@@ -1,6 +1,5 @@
 import React, { useState } from "react";
-import emailjs from "emailjs-com";
-
+import emailjs from "@emailjs/browser"; // ✅ Correct import
 
 export default function ContactForm(): JSX.Element {
   const [responseMessage, setResponseMessage] = useState<string>("");
@@ -10,29 +9,36 @@ export default function ContactForm(): JSX.Element {
   const [message, setMessage] = useState("");
 
   // ✅ EmailJS Config
-  const serviceID = "service_vn3ptoo";  // Replace with your EmailJS Service ID
-  const templateID = "template_x58rb0v";  // Replace with your EmailJS Template ID
-  const publicKey = "xbfdy7-2IY1_bgzil";  // Replace with your EmailJS Public Key
-
+  const serviceID = "service_vn3ptoo";  
+  const templateID = "template_x58rb0v";  
+  const publicKey = "jc98jMa-m9nhsM0Zh";  
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsSubmitting(true);
 
     const templateParams = {
-      name,
-      email,
-      message,
+      from_name: name,  
+      from_email: email, 
+      message,           
     };
 
     try {
-      await emailjs.send(serviceID, templateID, templateParams, publicKey);
+      const response = await emailjs.send(
+        serviceID,
+        templateID,
+        templateParams,
+        { publicKey }
+      );
+      
+      console.log("EmailJS Response:", response); // ✅ Log response
+
       setResponseMessage("Message sent successfully! ✅");
       setName("");
       setEmail("");
       setMessage("");
     } catch (error) {
-      console.error("EmailJS Error:", error);
+      console.error("EmailJS Error:", error); // ✅ Log error
       setResponseMessage("Failed to send message. Please try again. ❌");
     }
 
@@ -41,7 +47,6 @@ export default function ContactForm(): JSX.Element {
 
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-      {/* Name */}
       <label className="text-[#4e3d34] font-semibold">Your Name</label>
       <input
         type="text"
@@ -53,7 +58,6 @@ export default function ContactForm(): JSX.Element {
         onChange={(e) => setName(e.target.value)}
       />
 
-      {/* Email */}
       <label className="text-[#4e3d34] font-semibold">Your Email</label>
       <input
         type="email"
@@ -65,7 +69,6 @@ export default function ContactForm(): JSX.Element {
         onChange={(e) => setEmail(e.target.value)}
       />
 
-      {/* Message */}
       <label className="text-[#4e3d34] font-semibold">Your Message</label>
       <textarea
         id="message"
@@ -77,7 +80,6 @@ export default function ContactForm(): JSX.Element {
         onChange={(e) => setMessage(e.target.value)}
       ></textarea>
 
-      {/* Submit Button */}
       <button
         type="submit"
         className={`mt-4 px-6 py-3 rounded-md font-semibold transition ${
@@ -90,7 +92,6 @@ export default function ContactForm(): JSX.Element {
         {isSubmitting ? "Submitting..." : "Send Message"}
       </button>
 
-      {/* Response Message */}
       {responseMessage && <p className="text-green-600 mt-2">{responseMessage}</p>}
     </form>
   );
