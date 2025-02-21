@@ -1,6 +1,6 @@
 ---
 import { Image } from "astro:assets";
-import heroImage from "../../public/images/ornamentall.jpg";
+import heroImage from "/images/ornamentall.jpg";
 import arrow from "../assets/icons/arrowBlack.png";
 ---
 
@@ -9,7 +9,7 @@ import arrow from "../assets/icons/arrowBlack.png";
   <div class="absolute inset-0 w-full h-full">
     <Image
       class="w-full h-full object-cover"
-      src={heroImage}
+      src="/images/ornamentall.jpg"
       alt="A showcase of handmade Utah art"
     />
     <div class="absolute inset-0 bg-[#3c2f2f]/65"></div> <!-- ✅ Darker overlay for contrast -->

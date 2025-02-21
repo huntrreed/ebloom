@@ -1,8 +1,8 @@
 ---
 import { Image } from "astro:assets";
-import signs from "../../public/images/signsmiddle.jpg";
-import ornaments from "../../public/images/ornamentswtag.jpg";
-import plant from "../../public/images/customsucc.jpg";
+import signs from "/images/signsmiddle.jpg";
+import ornaments from "/images/ornamentswtag.jpg";
+import plant from "/images/customsucc.jpg";
 ---
 
 <!-- Dark Brown Background Section for Art & Signs -->
@@ -12,9 +12,9 @@ import plant from "../../public/images/customsucc.jpg";
   >
     <!-- SIGNS -->
     <a href="/gallery" class="relative w-1/2 h-full group">
-      <Image
+      <img
         class="h-full w-full object-cover rounded-l-lg transition-all duration-300 group-hover:brightness-75"
-        src={signs}
+        src="/images/signsmiddle.jpg"
         alt="Handmade custom wood signs"
       />
       <div
@@ -26,9 +26,9 @@ import plant from "../../public/images/customsucc.jpg";
 
     <!-- ART -->
     <a href="/shop" class="relative w-1/2 h-full group">
-      <Image
+      <img
         class="h-full w-full object-cover rounded-r-lg transition-all duration-300 group-hover:brightness-75"
-        src={ornaments}
+        src="/images/ornamentswtag.jpg"
         alt="Handmade custom ornaments"
       />
       <div
@@ -67,10 +67,10 @@ import plant from "../../public/images/customsucc.jpg";
 
     <!-- Image (No Overlay) -->
     <div class="h-full w-full">
-      <Image
-        class="w-full h-full rounded-lg object-cover"
-        src={plant}
-        alt="Custom handmade sign"
+      <img
+      class="w-full h-full rounded-lg object-cover"
+      src="/images/customsucc.jpg"
+      alt="Custom handmade sign"
       />
     </div>
   </div>
