@@ -1,7 +1,7 @@
 ---
 import Layout from "../layouts/Layout.astro";
 import { Image } from "astro:assets";
-// import selfie from "../assets/images/selfie.jpg";
+import selfie from "../../public/images/selfie.jpg";
 ---
 <Layout title="About">
   <div class="min-h-screen flex flex-col bg-[#f6e8d7]"> <!-- ✅ Background Color -->
@@ -29,7 +29,7 @@ import { Image } from "astro:assets";
 
       <!-- Image Section -->
       <div class="lg:w-[45%] flex justify-center">
-        <!-- <Image class="w-full max-w-md rounded-lg shadow-lg object-cover" src={selfie} alt="House plants in a room" /> -->
+        <Image class="w-full max-w-md rounded-lg shadow-lg object-cover" src={selfie} alt="House plants in a room" />
       </div>
     </section>
 
