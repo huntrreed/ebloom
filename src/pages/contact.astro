@@ -1,20 +1,19 @@
 ---
 import Layout from "../layouts/Layout.astro";
 import ContactForm from "../components/ContactForm";
-export const prerender = true;
+export const prerender = false;
 ---
 
 <Layout title="Contact">
-  <!-- ✅ Ensuring proper spacing below navbar -->
   <div class="min-h-screen flex flex-col items-center pt-48 pb-16 bg-[#f6e8d7]">
-    
-    <!-- Contact Form Container -->
     <div class="w-full max-w-lg bg-[#fef9f3] p-8 rounded-lg shadow-lg">
-      <h1 class="text-3xl font-semibold text-[#4e3d34] text-center mb-6">
-        Get in Touch
+      <h1 class="text-3xl font-semibold text-[#4e3d34] text-center mb-4">
+        Get in Touch!
       </h1>
+      <p class="text-[#4e3d34] text-sm mb-6 text-center">
+        Looking for something specific? Custom signs for your business, engraved ornaments, personalized gifts, or anything unique? Reach out and let’s chat!
+      </p>
       <ContactForm />
     </div>
-
   </div>
 </Layout>

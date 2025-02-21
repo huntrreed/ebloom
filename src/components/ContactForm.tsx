@@ -1,79 +1,67 @@
 import React, { useState } from "react";
-import emailjs from "@emailjs/browser"; // ✅ Correct import
 
-export default function ContactForm(): JSX.Element {
-  const [responseMessage, setResponseMessage] = useState<string>("");
-  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
+export default function ContactForm() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
-
-  // ✅ EmailJS Config
-  const serviceID = "service_vn3ptoo";  
-  const templateID = "template_x58rb0v";  
-  const publicKey = "jc98jMa-m9nhsM0Zh";  
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [responseMessage, setResponseMessage] = useState("");
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsSubmitting(true);
-
-    const templateParams = {
-      from_name: name,  
-      from_email: email, 
-      message,           
-    };
-
+  
+    const formData = { name, email, message };
+  
     try {
-      const response = await emailjs.send(
-        serviceID,
-        templateID,
-        templateParams,
-        { publicKey }
-      );
-      
-      console.log("EmailJS Response:", response); // ✅ Log response
-
-      setResponseMessage("Message sent successfully! ✅");
-      setName("");
-      setEmail("");
-      setMessage("");
+      const response = await fetch("/.netlify/functions/send-email", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+  
+      if (response.ok) {
+        setResponseMessage(
+          "Thanks! I'm excited to hear about your idea. I'll get in touch via email within 24-48 hours!"
+        );
+        setName("");
+        setEmail("");
+        setMessage("");
+      } else {
+        setResponseMessage("Failed to send message. Please try again later.");
+      }
     } catch (error) {
-      console.error("EmailJS Error:", error); // ✅ Log error
-      setResponseMessage("Failed to send message. Please try again. ❌");
+      console.error("Error sending message:", error);
+      setResponseMessage("An error occurred. Please try again later.");
     }
-
+  
     setIsSubmitting(false);
   };
+  
 
   return (
-    <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-      <label className="text-[#4e3d34] font-semibold">Your Name</label>
+    <form onSubmit={handleSubmit} className="space-y-4">
       <input
         type="text"
-        id="name"
-        name="name"
-        className="p-3 border rounded-md bg-[#eadfcb] text-[#4e3d34] focus:outline-none focus:ring-2 focus:ring-[#b77c45]"
+        placeholder="Your Name"
+        className="p-3 border rounded-md bg-[#fef9f3] text-[#4e3d34] focus:outline-none focus:ring-2 focus:ring-[#b77c45]"
         required
         value={name}
         onChange={(e) => setName(e.target.value)}
       />
-
-      <label className="text-[#4e3d34] font-semibold">Your Email</label>
       <input
         type="email"
-        id="email"
-        name="email"
-        className="p-3 border rounded-md bg-[#eadfcb] text-[#4e3d34] focus:outline-none focus:ring-2 focus:ring-[#b77c45]"
+        placeholder="Your Email"
+        className="p-3 border rounded-md bg-[#fef9f3] text-[#4e3d34] focus:outline-none focus:ring-2 focus:ring-[#b77c45]"
         required
         value={email}
         onChange={(e) => setEmail(e.target.value)}
       />
-
-      <label className="text-[#4e3d34] font-semibold">Your Message</label>
       <textarea
-        id="message"
-        name="message"
-        className="p-3 border rounded-md bg-[#eadfcb] text-[#4e3d34] focus:outline-none focus:ring-2 focus:ring-[#b77c45]"
+        placeholder="Your Message"
+        className="p-3 border rounded-md bg-[#fef9f3] text-[#4e3d34] focus:outline-none focus:ring-2 focus:ring-[#b77c45]"
         required
         rows={5}
         value={message}
