@@ -1,0 +1,18 @@
+---
+import Layout from "../layouts/Layout.astro";
+export const prerender = false;
+---
+
+<Layout title="Thank You">
+  <div class="min-h-screen flex flex-col items-center pt-48 pb-16 bg-[#f6e8d7]">
+    <div class="w-full max-w-lg bg-[#fef9f3] p-8 rounded-lg shadow-lg text-center">
+      <h1 class="text-3xl font-semibold text-[#4e3d34]">Thank You!</h1>
+      <p class="text-[#4e3d34] mt-4">
+        Your message has been received. I'll reply within 24-48 hours!
+      </p>
+      <a href="/" class="mt-6 inline-block bg-[#b77c45] text-white px-6 py-3 rounded-md hover:bg-[#8f5f33]">
+        Back to Home
+      </a>
+    </div>
+  </div>
+</Layout>
