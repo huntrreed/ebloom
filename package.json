@@ -1,6 +1,6 @@
 {
   "name": "embered-blooms",
-  "type": "module",
+  "type": "commonjs",
   "version": "0.0.1",
   "scripts": {
     "dev": "concurrently \"npm run dev:astro\" \"npm run dev:server\"",
