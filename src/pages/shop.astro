@@ -33,18 +33,19 @@ const categories = ["All", "Ornament", "Print", "Card"];
   <!-- PRODUCTS GRID -->
   <div class="products-container" id="productsContainer">
     {products.map(product => (
-      <PlantShop 
-        key={product.slug}  
-        title={typeof product.title === "string" ? product.title : ""}
-        img={product.images.length > 0 ? product.images[0] : ""} 
-        price={typeof product.price === "number" ? product.price.toFixed(2) : "0.00"}
-        inStock={product.inStock}
-        category={product.category ? product.category.toLowerCase() : "all"}
-        slug={product.slug} 
-        data-instock={product.inStock}  
-        data-category={product.category ? product.category.toLowerCase() : "all"}
-
-      />
+          <a href={`/shop/${product.slug}`} class="product-card"> 
+            <PlantShop 
+              key={product.slug}  
+              title={typeof product.title === "string" ? product.title : ""}
+              img={product.images.length > 0 ? product.images[0] : ""} 
+              price={typeof product.price === "number" ? product.price.toFixed(2) : product.price.toString()}
+              inStock={product.inStock}
+              category={product.category ? product.category.toLowerCase() : "all"}
+              slug={product.slug} 
+              data-instock={product.inStock}  
+              data-category={product.category ? product.category.toLowerCase() : "all"}
+            />
+          </a>
     ))}
   </div>
 </Layout>

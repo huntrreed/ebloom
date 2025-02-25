@@ -9,7 +9,9 @@
     "dev:server": "nodemon server.js",
     "build": "astro build",
     "preview": "astro preview",
-    "astro": "astro"
+    "astro": "astro",
+    "netlify:dev": "netlify dev"
+
   },
   "dependencies": {
     "@astrojs/netlify": "^3.0.2",
