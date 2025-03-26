@@ -62,7 +62,6 @@ product.images = Array.isArray(product.images) ? product.images : [];
         <h1 class="text-3xl font-bold text-[#4e3d34]">{product.title}</h1>
         <p class="text-xl text-[#4e3d34] font-semibold mt-2">${typeof product.price === 'number' ? product.price.toFixed(2) : product.price}</p>
 
-        <!-- 🔁 Render variant selector if variants exist -->
         {Array.isArray(product.variants) && product.variants.length > 0 && (
           <div class="mt-4">
             <label class="block font-semibold text-[#4e3d34] mb-2">Select Variant:</label>
@@ -75,6 +74,7 @@ product.images = Array.isArray(product.images) ? product.images : [];
         )}
 
         <button 
+          id="addToCartBtn"
           class={`mt-4 px-6 py-3 rounded-md font-semibold transition 
             ${product.inStock 
               ? "bg-[#4e3d34] text-[#eadfcb] hover:bg-[#3a2b23]" 
@@ -89,19 +89,20 @@ product.images = Array.isArray(product.images) ? product.images : [];
     <div class="mt-16 p-6 bg-orange-300 text-[#4e3d34] text-lg rounded-lg">
       <p>{product.description}</p>
     </div>
-    <div id="product-data" class="hidden">{JSON.stringify(product.images)}</div>
+    <div id="product-data" class="hidden">{JSON.stringify(product)}</div>
   </div>
 </Layout>
 
 <script>
   document.addEventListener("DOMContentLoaded", function () {
-    const productDataElement = document.getElementById("product-data");
-    const images = productDataElement?.textContent ? JSON.parse(productDataElement.textContent) : [];
+    const productData = JSON.parse(document.getElementById("product-data")?.textContent || "{}");
 
-    let currentIndex = 0;
     const imageElement = document.getElementById("image");
     const prevButton = document.getElementById("prevImage");
     const nextButton = document.getElementById("nextImage");
+
+    let currentIndex = 0;
+    const images = Array.isArray(productData.images) ? productData.images : [];
 
     function updateImage(index) {
       if (index >= 0 && index < images.length) {
@@ -112,8 +113,8 @@ product.images = Array.isArray(product.images) ? product.images : [];
     }
 
     function updateButtons() {
-      if (prevButton) prevButton.classList.toggle("hidden", currentIndex === 0);
-      if (nextButton) nextButton.classList.toggle("hidden", currentIndex === images.length - 1);
+      prevButton?.classList.toggle("hidden", currentIndex === 0);
+      nextButton?.classList.toggle("hidden", currentIndex === images.length - 1);
     }
 
     prevButton?.addEventListener("click", () => updateImage(currentIndex - 1));
@@ -121,14 +122,37 @@ product.images = Array.isArray(product.images) ? product.images : [];
 
     document.querySelectorAll('[data-index]').forEach(button => {
       button.addEventListener('click', event => {
-        const target = event.currentTarget;
-        if (target) {
-          const index = parseInt((target).getAttribute('data-index') || '0', 10);
-          updateImage(index);
-        }
+        const index = parseInt(button.getAttribute('data-index') || '0');
+        updateImage(index);
       });
     });
 
     updateButtons();
+
+    const addToCartBtn = document.getElementById("addToCartBtn");
+    if (addToCartBtn) {
+      addToCartBtn.addEventListener("click", () => {
+        const cart = JSON.parse(localStorage.getItem("cart") || "[]");
+        const variantSelector = document.getElementById("variantSelector");
+        let selectedVariant = null;
+
+        if (variantSelector) {
+          const index = parseInt(variantSelector.value);
+          selectedVariant = productData.variants?.[index];
+        }
+
+        cart.push({
+          title: productData.title,
+          slug: productData.slug,
+          price: selectedVariant?.price || productData.price,
+          image: productData.images?.[0] || "",
+          variant: selectedVariant?.title || null
+        });
+
+        localStorage.setItem("cart", JSON.stringify(cart));
+        const bubble = document.getElementById("cart-bubble");
+        if (bubble) bubble.textContent = cart.length.toString();
+      });
+    }
   });
 </script>

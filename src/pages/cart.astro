@@ -1,0 +1,91 @@
+---
+import Layout from "../layouts/Layout.astro";
+---
+
+<Layout title="Your Cart">
+  <div class="pt-40 pb-20 px-6 text-center text-[#4e3d34]">
+    <h1 class="text-3xl font-bold mb-8">Shopping Cart</h1>
+    <div id="cart-container" class="flex flex-col gap-6 items-center justify-center w-full max-w-5xl mx-auto"></div>
+    <p id="empty-message" class="text-lg mt-8">Your cart is empty.</p>
+  </div>
+
+  <!-- Modal -->
+  <div id="modal" class="fixed inset-0 hidden bg-black bg-opacity-50 flex items-center justify-center z-50">
+    <div class="bg-[#ebdccb] text-[#4e3d34] p-8 rounded-lg shadow-lg max-w-md text-center">
+      <p class="text-lg font-medium mb-4">Actually no this doesn’t work right now, thanks anyways and nice try — just email me and I will send you cards — thanks!</p>
+      <button id="close-modal" class="mt-2 px-4 py-2 bg-[#4e3d34] text-[#eadfcb] rounded hover:bg-[#3a2b23] transition">Okay!</button>
+    </div>
+  </div>
+</Layout>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const cartContainer = document.getElementById("cart-container");
+    const emptyMessage = document.getElementById("empty-message");
+    const modal = document.getElementById("modal");
+    const closeModalBtn = document.getElementById("close-modal");
+    const cart = JSON.parse(localStorage.getItem("cart") || "[]");
+
+    if (cart.length === 0) return;
+    emptyMessage.style.display = "none";
+
+    let subtotal = 0;
+
+    cart.forEach((item, index) => {
+      const itemDiv = document.createElement("div");
+      itemDiv.className = "flex flex-col md:flex-row items-center justify-between gap-4 bg-[#ebdccb] border border-[#4e3d34] p-6 rounded-lg shadow-md w-full";
+      itemDiv.innerHTML = `
+        <div class="flex items-center gap-4 w-full md:w-2/3">
+          <img src="${item.image}" alt="${item.title}" class="w-24 h-24 object-cover rounded-md border" />
+          <div class="text-left">
+            <h3 class="text-xl font-semibold mb-1">${item.title}</h3>
+            ${item.variant ? `<p class="italic text-sm">${item.variant}</p>` : ""}
+          </div>
+        </div>
+        <div class="text-right w-full md:w-1/3 flex flex-col items-end">
+          <div class="flex items-center gap-2 mb-2">
+            <span class="text-sm">Qty: 1</span>
+            <button data-index="${index}" class="remove-item text-sm text-red-700 hover:underline">Remove</button>
+          </div>
+          <p class="text-lg font-bold">$${item.price.toFixed(2)}</p>
+        </div>
+      `;
+      cartContainer.appendChild(itemDiv);
+      subtotal += item.price;
+    });
+
+    const subtotalDiv = document.createElement("div");
+    subtotalDiv.className = "text-right w-full max-w-5xl mx-auto mt-10 border-t border-[#4e3d34] pt-6";
+    subtotalDiv.innerHTML = `
+      <p class="text-2xl font-semibold text-[#4e3d34]">Subtotal: $${subtotal.toFixed(2)}</p>
+      <button id="checkout-btn" class="mt-4 px-6 py-3 bg-[#4e3d34] text-[#eadfcb] font-bold rounded-md hover:bg-[#3a2b23] transition">Checkout</button>
+    `;
+    cartContainer.appendChild(subtotalDiv);
+
+    // Remove button logic
+    document.querySelectorAll(".remove-item").forEach(btn => {
+      btn.addEventListener("click", (e) => {
+        const index = parseInt(e.target.getAttribute("data-index"), 10);
+        cart.splice(index, 1);
+        localStorage.setItem("cart", JSON.stringify(cart));
+        location.reload();
+      });
+    });
+
+    // Checkout modal logic
+    document.getElementById("checkout-btn")?.addEventListener("click", () => {
+      modal.classList.remove("hidden");
+    });
+
+    closeModalBtn?.addEventListener("click", () => {
+      modal.classList.add("hidden");
+    });
+  });
+</script>
+
+<style>
+  body {
+    background-color: #b77c45 !important;
+    overflow-x: hidden;
+  }
+</style>
