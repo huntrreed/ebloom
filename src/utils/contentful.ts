@@ -8,31 +8,32 @@ const client = createClient({
 // Fetch Products for Store Page
 export async function getProducts() {
   try {
-    const response = await client.getEntries({ 
+    const response = await client.getEntries({
       content_type: "product",
       include: 2
     });
-
-    console.log("🔍 Raw Contentful Response:", JSON.stringify(response.items, null, 2));
 
     return response.items.map((item) => ({
       title: item.fields.title,
       price: item.fields.price || 0,
       inStock: item.fields.inStock === true,
-      slug: item.fields.slug || "missing-slug",  // ✅ Debug: See if slug exists
+      slug: item.fields.slug || "missing-slug",
       category: typeof item.fields.category === 'string' ? item.fields.category.toLowerCase() : "all",
+      description: item.fields.description || "",
       images: Array.isArray(item.fields.imageUrl)
         ? item.fields.imageUrl.map((img: any) => img?.fields?.file?.url ? `https:${img.fields.file.url}` : "").filter(Boolean)
         : [],
     }));
-    
   } catch (error) {
     console.error("❌ Error fetching products:", error);
     return [];
   }
 }
 
-
+export async function getProductBySlug(slug: string) {
+  const products = await getProducts();
+  return products.find(product => product.slug === slug);
+}
 
 
 

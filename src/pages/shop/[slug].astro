@@ -1,4 +1,6 @@
 ---
+export const prerender = true;
+
 import Layout from "../../layouts/Layout.astro";
 import { getProducts } from "../../utils/contentful";
 const leftIcon = "/icons/leftIcon.png";
@@ -6,65 +8,45 @@ const rightIcon = "/icons/rightIcon.png";
 
 export async function getStaticPaths() {
   const products = await getProducts();
-  
-  return products.map(product => ({
+  return products.map((product) => ({
     params: { slug: product.slug },
     props: { product },
   }));
 }
 
-interface Product {
-  title: any;
-  price: number | string;
-  inStock: boolean;
-  images: string[];
-  description?: string;
+const { product } = Astro.props ?? {};
+if (!product || typeof product !== 'object') {
+  return Astro.redirect("/404");
 }
 
-const { product }: { product: Product } = Astro.props;
 product.price = typeof product.price === 'number' || typeof product.price === 'string' ? product.price : '0';
 product.price = typeof product.price === 'number' ? product.price : parseFloat(product.price) || 0;
-
-// Ensure product has a description property
 product.description = product.description || "No description available.";
-
-if (!product) {
-  return Astro.redirect('/404');
-}
+product.images = Array.isArray(product.images) ? product.images : [];
 ---
 
 <Layout title={typeof product.title === 'string' ? product.title : 'Untitled'}>
   <div class="container mx-auto px-6 pt-32 pb-16 mt-24">
-
-    <!-- Back to Shop Button -->
     <div class="mb-6">
       <a href="/shop" class="bg-[#4e3d34] text-[#eadfcb] px-4 py-2 rounded-md hover:bg-[#3a2b23] transition inline-block">
         ← Return to Shop
       </a>
     </div>
 
-    <!-- Product Display Section -->
     <div class="flex flex-col md:flex-row items-start md:items-center gap-10">
-      
-      <!-- Product Images -->
       <div class="w-full md:w-1/2 relative flex flex-col items-center">
         <div class="relative flex items-center justify-center w-full">
-
-          <!-- Left Arrow -->
           <button id="prevImage" class="absolute left-[-50px] md:left-[-20px] top-1/2 transform -translate-y-1/2 opacity-80 hover:opacity-100 transition hidden">
             <img src={leftIcon} alt="Previous" class="w-10 h-10" />
           </button>
 
-          <!-- Main Image -->
           <img id="image" class="w-full max-w-sm object-cover rounded-lg" src={Array.isArray(product.images) && typeof product.images[0] === 'string' ? product.images[0] : ""} alt={typeof product.title === 'string' ? product.title : 'Untitled'} />
 
-          <!-- Right Arrow -->
           <button id="nextImage" class="absolute right-[-50px] md:right-[-20px] top-1/2 transform -translate-y-1/2 opacity-80 hover:opacity-100 transition hidden">
             <img src={rightIcon} alt="Next" class="w-10 h-10" />
           </button>
         </div>
 
-        <!-- Thumbnail Images -->
         {product.images.length > 1 && (
           <div class="flex justify-center gap-2 mt-4">
             {product.images.map((img, index) => (
@@ -76,78 +58,65 @@ if (!product) {
         )}
       </div>
 
-      <!-- Product Info -->
       <div class="w-full md:w-1/2 text-left">
         <h1 class="text-3xl font-bold text-[#4e3d34]">{product.title}</h1>
         <p class="text-xl text-[#4e3d34] font-semibold mt-2">${typeof product.price === 'number' ? product.price.toFixed(2) : product.price}</p>
-        <!-- <p class="mt-2 text-sm">{product.inStock ? "In Stock" : "Sold Out"}</p> -->
 
-        <!-- Add to Cart or Sold Out Button -->
         <button 
           class={`mt-4 px-6 py-3 rounded-md font-semibold transition 
             ${product.inStock 
               ? "bg-[#4e3d34] text-[#eadfcb] hover:bg-[#3a2b23]" 
               : "bg-[#b7a89f] text-[#4e3d34] italic cursor-not-allowed"}`} 
           disabled={!product.inStock}
->
+        >
           {product.inStock ? "Add to Cart" : <em>Sold Out</em>}
         </button>
       </div>
-
     </div>
 
-    <!-- Description Section -->
     <div class="mt-16 p-6 bg-orange-300 text-[#4e3d34] text-lg rounded-lg">
       <p>{product.description}</p>
     </div>
-    <!-- Hidden element to store product images data -->
     <div id="product-data" class="hidden">{JSON.stringify(product.images)}</div>
   </div>
 </Layout>
 
-
-<!-- Image Scroll Script -->
 <script>
   document.addEventListener("DOMContentLoaded", function () {
-    function updateImage(index: number) {
-      if (index >= 0 && index < images.length) {
-        currentIndex = index;
-        if (imageElement) {
-          (imageElement as HTMLImageElement).src = images[currentIndex];
-        }
-        updateButtons();
-      }
-    }
-    // Read images from hidden JSON
     const productDataElement = document.getElementById("product-data");
-    const images = productDataElement && productDataElement.textContent ? JSON.parse(productDataElement.textContent) : [];
+    const images = productDataElement?.textContent ? JSON.parse(productDataElement.textContent) : [];
 
     let currentIndex = 0;
     const imageElement = document.getElementById("image");
     const prevButton = document.getElementById("prevImage");
     const nextButton = document.getElementById("nextImage");
 
+    function updateImage(index) {
+      if (index >= 0 && index < images.length) {
+        currentIndex = index;
+        if (imageElement) imageElement.src = images[currentIndex];
+        updateButtons();
+      }
+    }
+
     function updateButtons() {
       if (prevButton) prevButton.classList.toggle("hidden", currentIndex === 0);
       if (nextButton) nextButton.classList.toggle("hidden", currentIndex === images.length - 1);
     }
 
-    // Event listeners for arrows
-    if (prevButton) prevButton.addEventListener("click", () => updateImage(currentIndex - 1));
-    if (nextButton) nextButton.addEventListener("click", () => updateImage(currentIndex + 1));
+    prevButton?.addEventListener("click", () => updateImage(currentIndex - 1));
+    nextButton?.addEventListener("click", () => updateImage(currentIndex + 1));
 
-    // Event listeners for thumbnails
     document.querySelectorAll('[data-index]').forEach(button => {
-      button.addEventListener('click', (event) => {
+      button.addEventListener('click', event => {
         const target = event.currentTarget;
         if (target) {
-          const index = parseInt((target as HTMLElement).getAttribute('data-index') || '0', 10);
+          const index = parseInt((target).getAttribute('data-index') || '0', 10);
           updateImage(index);
         }
-        updateImage(index);
       });
     });
 
-    updateButtons(); // Ensure correct initial state
+    updateButtons();
   });
 </script>

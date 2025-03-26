@@ -3,7 +3,18 @@ import Layout from "../layouts/Layout.astro";
 import { getProducts } from "../utils/contentful";
 import PlantShop from "../components/PlantShop";
 
-const products = await getProducts();
+const url = new URL(Astro.request.url);
+const categoryParam = url.searchParams.get("category")?.toLowerCase();
+const availabilityParam = url.searchParams.get("availability")?.toLowerCase();
+
+let products = await getProducts();
+if (categoryParam && categoryParam !== "all") {
+  products = products.filter(p => p.category === categoryParam);
+}
+if (availabilityParam === "available") {
+  products = products.filter(p => p.inStock);
+}
+
 const categories = ["All", "Ornament", "Print", "Card"];
 ---
 
@@ -12,23 +23,21 @@ const categories = ["All", "Ornament", "Print", "Card"];
     OUR SHOP
   </h3>
 
- <!-- ✅ FILTERS SECTION -->
- <div class="filter-container flex flex-wrap justify-center gap-6 mb-6 p-4 bg-[#4e3d34] rounded-lg">
-  <label class="text-[#eadfcb] font-semibold">Filter by:</label>
+  <!-- ✅ FILTERS SECTION -->
+  <div class="filter-container flex flex-wrap justify-center gap-6 mb-6 p-4 bg-[#4e3d34] rounded-lg">
+    <label class="text-[#eadfcb] font-semibold">Filter by:</label>
 
-  <!-- Availability Filter -->
-  <select id="availabilityFilter" class="p-2 border rounded-md bg-[#eadfcb] text-[#4e3d34]">
-    <option value="all">All</option>
-    <option value="available">In Stock Only</option> 
-  </select>
+    <select id="availabilityFilter" class="p-2 border rounded-md bg-[#eadfcb] text-[#4e3d34]">
+      <option value="all" selected={availabilityParam === null || availabilityParam === 'all'}>All</option>
+      <option value="available" selected={availabilityParam === 'available'}>In Stock Only</option> 
+    </select>
 
-  <!-- Type Filter -->
-  <select id="categoryFilter" class="p-2 border rounded-md bg-[#eadfcb] text-[#4e3d34]">
-    {categories.map(category => (
-      <option value={category.toLowerCase()}>{category}</option>
-    ))}
-  </select>
-</div>
+    <select id="categoryFilter" class="p-2 border rounded-md bg-[#eadfcb] text-[#4e3d34]">
+      {categories.map(category => (
+        <option value={category.toLowerCase()} selected={category.toLowerCase() === categoryParam}>{category}</option>
+      ))}
+    </select>
+  </div>
 
   <!-- PRODUCTS GRID -->
   <div class="products-container" id="productsContainer">
@@ -43,41 +52,32 @@ const categories = ["All", "Ornament", "Print", "Card"];
         slug={product.slug} 
         data-instock={product.inStock}  
         data-category={product.category ? product.category.toLowerCase() : "all"}
-
       />
     ))}
   </div>
 </Layout>
 
-<!-- FILTER SCRIPT -->
 <script>
-  document.addEventListener("DOMContentLoaded", function () {
-    const availabilityFilter = document.getElementById("availabilityFilter") as HTMLSelectElement;
-    const categoryFilter = document.getElementById("categoryFilter") as HTMLSelectElement;
+  document.addEventListener("DOMContentLoaded", () => {
+    const availabilityFilter = document.getElementById("availabilityFilter");
+    const categoryFilter = document.getElementById("categoryFilter");
 
-    function updateFilters() {
-      if (!availabilityFilter || !categoryFilter) return;
+    function updateURLFilters() {
       const availability = availabilityFilter.value;
       const category = categoryFilter.value;
+      const params = new URLSearchParams();
 
-      document.querySelectorAll(".product-card").forEach(card => {
-        const isAvailable = card.getAttribute("data-instock") === "true"; 
-        const productCategory = card.getAttribute("data-category");
+      if (availability !== "all") params.set("availability", availability);
+      if (category !== "all") params.set("category", category);
 
-        let show = true;
-
-        if (availability === "available" && !isAvailable) show = false;
-        if (availability === "sold-out" && isAvailable) show = false;
-        if (category !== "all" && productCategory !== category) show = false;
-
-        (card as HTMLElement).style.display = show ? "block" : "none";
-      });
+      window.location.search = params.toString();
     }
 
-    availabilityFilter.addEventListener("change", updateFilters);
-    categoryFilter.addEventListener("change", updateFilters);
+    availabilityFilter?.addEventListener("change", updateURLFilters);
+    categoryFilter?.addEventListener("change", updateURLFilters);
   });
 </script>
+
 
 <style>
   /* Dark brown background */
