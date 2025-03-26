@@ -62,6 +62,18 @@ product.images = Array.isArray(product.images) ? product.images : [];
         <h1 class="text-3xl font-bold text-[#4e3d34]">{product.title}</h1>
         <p class="text-xl text-[#4e3d34] font-semibold mt-2">${typeof product.price === 'number' ? product.price.toFixed(2) : product.price}</p>
 
+        <!-- 🔁 Render variant selector if variants exist -->
+        {Array.isArray(product.variants) && product.variants.length > 0 && (
+          <div class="mt-4">
+            <label class="block font-semibold text-[#4e3d34] mb-2">Select Variant:</label>
+            <select id="variantSelector" class="w-full p-2 border rounded-md text-[#4e3d34]">
+              {product.variants.map((variant, index) => (
+                <option value={index}>{variant.title} — ${variant.price}</option>
+              ))}
+            </select>
+          </div>
+        )}
+
         <button 
           class={`mt-4 px-6 py-3 rounded-md font-semibold transition 
             ${product.inStock 

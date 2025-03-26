@@ -23,6 +23,13 @@ export async function getProducts() {
       images: Array.isArray(item.fields.imageUrl)
         ? item.fields.imageUrl.map((img: any) => img?.fields?.file?.url ? `https:${img.fields.file.url}` : "").filter(Boolean)
         : [],
+      variants: Array.isArray(item.fields.variants)
+        ? item.fields.variants.map((v: any) => ({
+            title: v.title || "Untitled Variant",
+            price: v.price || 0,
+            inStock: v.inStock !== false,
+          }))
+        : [],
     }));
   } catch (error) {
     console.error("❌ Error fetching products:", error);
@@ -35,16 +42,18 @@ export async function getProductBySlug(slug: string) {
   return products.find(product => product.slug === slug);
 }
 
-
-
 // Fetch Gallery Items for Gallery Page
 export async function getGalleryItems() {
-    const entries = await client.getEntries({ content_type: 'galleryItem' });
+  const entries = await client.getEntries({ content_type: 'galleryItem' });
 
-    return entries.items.map(item => ({
-      title: item.fields.title,
-      category: item.fields.category,
-      images: Array.isArray(item.fields.imageurl) ? item.fields.imageurl.map((img: any) => img && img.fields && img.fields.file ? img.fields.file.url : '') : [],
-      tags: item.fields.tags || [],
-    }));
+  return entries.items.map(item => ({
+    title: item.fields.title,
+    category: item.fields.category,
+    images: Array.isArray(item.fields.imageurl)
+      ? item.fields.imageurl.map((img: any) =>
+          img?.fields?.file?.url ? `https:${img.fields.file.url}` : ""
+        ).filter(Boolean)
+      : [],
+    tags: item.fields.tags || [],
+  }));
 }
